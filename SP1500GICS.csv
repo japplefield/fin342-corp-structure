@@ -1,4 +1,4 @@
-﻿,GICS Sector,GICS Industry Group,GICS Industry,GICS Sub-Industry
+﻿Symbol,GICS Sector,GICS Industry Group,GICS Industry,GICS Sub-Industry
 DDD,Information Technology,Technology Hardware & Equipment,Technology Hardware Storage & Peripherals,Technology Hardware Storage & Peripherals
 MMM,Industrials,Capital Goods,Industrial Conglomerates,Industrial Conglomerates
 EGHT,Information Technology,Software & Services,Software,Application Software
@@ -55,7 +55,7 @@ ALE,Utilities,Utilities,Electric Utilities,Electric Utilities
 ADS,Information Technology,Software & Services,IT Services,Data Processing & Outsourced Services
 LNT,Utilities,Utilities,Electric Utilities,Electric Utilities
 MDRX,Health Care,Health Care Equipment & Services,Health Care Technology,Health Care Technology
-GOOG.L,#N/A,#N/A,#N/A,#N/A
+GOOGL,Communication Services,Media & Entertainment,Interactive Media & Services,Interactive Media & Services
 GOOG,Communication Services,Media & Entertainment,Interactive Media & Services,Interactive Media & Services
 MO,Consumer Staples,Food Beverage & Tobacco,Tobacco,Tobacco
 AMZN,Consumer Discretionary,Retailing,Internet & Direct Marketing Retail,Internet & Direct Marketing Retail
@@ -164,7 +164,7 @@ B,Industrials,Capital Goods,Machinery,Industrial Machinery
 BAX,Health Care,Health Care Equipment & Services,Health Care Equipment & Supplies,Health Care Equipment
 BDX,Health Care,Health Care Equipment & Services,Health Care Equipment & Supplies,Health Care Equipment
 BBBY,Consumer Discretionary,Retailing,Specialty Retail,Homefurnishing Retail
-BELF.B,#N/A,#N/A,#N/A,#N/A
+BELFB,Information Technology,Technology Hardware & Equipment,Electronic Equipment Instruments & Components,Electronic Components
 BDC,Information Technology,Technology Hardware & Equipment,Electronic Equipment Instruments & Components,Electronic Components
 BHE,Information Technology,Technology Hardware & Equipment,Electronic Equipment Instruments & Components,Electronic Manufacturing Services
 BRK.B,Financials,Diversified Financials,Diversified Financial Services,Multi-Sector Holdings
@@ -253,7 +253,6 @@ CE,Materials,Materials,Chemicals,Specialty Chemicals
 CNC,Health Care,Health Care Equipment & Services,Health Care Providers & Services,Managed Health Care
 CNP,Utilities,Utilities,Multi-Utilities,Multi-Utilities
 CENT,Consumer Staples,Household & Personal Products,Household Products,Household Products
-CENT.A,#N/A,#N/A,#N/A,#N/A
 CPF,Financials,Banks,Banks,Regional Banks
 CENX,Materials,Materials,Metals & Mining,Aluminum
 CCS,Consumer Discretionary,Consumer Durables & Apparel,Household Durables,Homebuilding
@@ -310,7 +309,7 @@ CFX,Industrials,Capital Goods,Machinery,Industrial Machinery
 CL,Consumer Staples,Household & Personal Products,Household Products,Household Products
 COLB,Financials,Banks,Banks,Regional Banks
 COLM,Consumer Discretionary,Consumer Durables & Apparel,Textiles Apparel & Luxury Goods,Apparel Accessories & Luxury Goods
-CMCS.A,#N/A,#N/A,#N/A,#N/A
+CMCSA,Communication Services,Media & Entertainment,Media,Cable & Satellite
 CMA,Financials,Banks,Banks,Regional Banks
 FIX,Industrials,Capital Goods,Construction & Engineering,Construction & Engineering
 CBSH,Financials,Banks,Banks,Regional Banks
@@ -323,7 +322,6 @@ CMP,Materials,Materials,Metals & Mining,Diversified Metals & Mining
 CPSI,Health Care,Health Care Equipment & Services,Health Care Technology,Health Care Technology
 CMTL,Information Technology,Technology Hardware & Equipment,Communications Equipment,Communications Equipment
 CAG,Consumer Staples,Food Beverage & Tobacco,Food Products,Packaged Foods & Meats
-CNXC,Information Technology,Software & Services,IT Services,Data Processing & Outsourced Services
 CXO,Energy,Energy,Oil Gas & Consumable Fuels,Oil & Gas Exploration & Production
 CNMD,Health Care,Health Care Equipment & Services,Health Care Equipment & Supplies,Health Care Equipment
 CONN,Consumer Discretionary,Retailing,Specialty Retail,Computer & Electronics Retail
@@ -395,8 +393,8 @@ DCOM,Financials,Banks,Banks,Regional Banks
 DIN,Consumer Discretionary,Consumer Services,Hotels Restaurants & Leisure,Restaurants
 DIOD,Information Technology,Semiconductors & Semiconductor Equipment,Semiconductors & Semiconductor Equipment,Semiconductors
 DFS,Financials,Diversified Financials,Consumer Finance,Consumer Finance
-DISC.A,#N/A,#N/A,#N/A,#N/A
-DISC.K,#N/A,#N/A,#N/A,#N/A
+DISCA,Communication Services,Media & Entertainment,Media,Broadcasting
+DISCK,Communication Services,Media & Entertainment,Media,Broadcasting
 DISH,Communication Services,Media & Entertainment,Media,Cable & Satellite
 DHC,Real Estate,Real Estate,Equity Real Estate Investment Trusts (REITs),Health Care REITs
 BOOM,Energy,Energy,Energy Equipment & Services,Oil & Gas Equipment & Services
@@ -738,7 +736,7 @@ KAR,Industrials,Commercial & Professional Services,Commercial Services & Supplie
 KBH,Consumer Discretionary,Consumer Durables & Apparel,Household Durables,Homebuilding
 KBR,Information Technology,Software & Services,IT Services,IT Consulting & Other Services
 K,Consumer Staples,Food Beverage & Tobacco,Food Products,Packaged Foods & Meats
-KELY.A,#N/A,#N/A,#N/A,#N/A
+KELYA,Industrials,Commercial & Professional Services,Professional Services,Human Resource & Employment Services
 KMPR,Financials,Insurance,Insurance,Property & Casualty Insurance
 KMT,Industrials,Capital Goods,Machinery,Industrial Machinery
 KEY,Financials,Banks,Banks,Regional Banks
@@ -983,7 +981,6 @@ ORLY,Consumer Discretionary,Retailing,Specialty Retail,Automotive Retail
 OFIX,Health Care,Health Care Equipment & Services,Health Care Equipment & Supplies,Health Care Equipment
 OSK,Industrials,Capital Goods,Machinery,Construction Machinery & Heavy Trucks
 OSIS,Information Technology,Technology Hardware & Equipment,Electronic Equipment Instruments & Components,Electronic Equipment & Instruments
-OTIS,Industrials,Capital Goods,Machinery,Industrial Machinery
 OMI,Health Care,Health Care Equipment & Services,Health Care Providers & Services,Health Care Distributors
 OC,Industrials,Capital Goods,Building Products,Building Products
 OXM,Consumer Discretionary,Consumer Durables & Apparel,Textiles Apparel & Luxury Goods,Apparel Accessories & Luxury Goods
@@ -1161,7 +1158,7 @@ SEM,Health Care,Health Care Equipment & Services,Health Care Providers & Service
 SIGI,Financials,Insurance,Insurance,Property & Casualty Insurance
 SRE,Utilities,Utilities,Multi-Utilities,Multi-Utilities
 SMTC,Information Technology,Semiconductors & Semiconductor Equipment,Semiconductors & Semiconductor Equipment,Semiconductors
-SENE.A,#N/A,#N/A,#N/A,#N/A
+SENEA,Consumer Staples,Food Beverage & Tobacco,Food Products,Packaged Foods & Meats
 SXT,Materials,Materials,Chemicals,Specialty Chemicals
 SCI,Consumer Discretionary,Consumer Services,Diversified Consumer Services,Specialized Consumer Services
 SVC,Real Estate,Real Estate,Equity Real Estate Investment Trusts (REITs),Hotel & Resort REITs
@@ -1270,7 +1267,6 @@ TCBI,Financials,Banks,Banks,Regional Banks
 TXN,Information Technology,Semiconductors & Semiconductor Equipment,Semiconductors & Semiconductor Equipment,Semiconductors
 TXRH,Consumer Discretionary,Consumer Services,Hotels Restaurants & Leisure,Restaurants
 TXT,Industrials,Capital Goods,Aerospace & Defense,Aerospace & Defense
-AAN,Consumer Discretionary,Retailing,Specialty Retail,Homefurnishing Retail
 AES,Utilities,Utilities,Independent Power and Renewable Electricity Producers,Independent Power Producers & Energy Traders
 ALL,Financials,Insurance,Insurance,Property & Casualty Insurance
 ANDE,Consumer Staples,Food & Staples Retailing,Food & Staples Retailing,Food Distributors
@@ -1438,7 +1434,6 @@ VSH,Information Technology,Technology Hardware & Equipment,Electronic Equipment 
 VSTO,Consumer Discretionary,Consumer Durables & Apparel,Leisure Products,Leisure Products
 VC,Consumer Discretionary,Automobiles & Components,Auto Components,Auto Parts & Equipment
 VG,Communication Services,Telecommunication Services,Diversified Telecommunication Services,Alternative Carriers
-VNT,Information Technology,Technology Hardware & Equipment,Electronic Equipment Instruments & Components,Electronic Equipment & Instruments
 VNO,Real Estate,Real Estate,Equity Real Estate Investment Trusts (REITs),Office REITs
 VMC,Materials,Materials,Construction Materials,Construction Materials
 WRB,Financials,Insurance,Insurance,Property & Casualty Insurance

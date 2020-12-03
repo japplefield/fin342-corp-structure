@@ -6,7 +6,7 @@ import numpy
 from matplotlib import rcParams
 from labellines import labelLine, labelLines
 from datetime import datetime, timedelta
-rcParams['figure.figsize'] = [15, 10]
+rcParams['figure.figsize'] = [10, 5]
 
 data_dict = {}
 summary = {}
@@ -16,7 +16,7 @@ unique_industries = set()
 unique_sub_industries = set()
 
 # Read in each company's ticker, Sector, and Industry Group
-with open('SP500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
+with open('SP1500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
     reader = csv.DictReader(ifh)
     for row in reader:
         data_dict[row['Symbol']] = {}
@@ -34,7 +34,7 @@ with open('SP500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
             unique_sub_industries.add(row['GICS Sub-Industry'])
 
 # Calculate Normalized EBITDA for each company
-with open('SP500EBITDA.csv', newline='') as ifh:
+with open('SP1500EBITDA.csv', newline='') as ifh:
     ifh.readline()
     for row in ifh:
         data = row.strip().split(',')
@@ -46,7 +46,7 @@ with open('SP500EBITDA.csv', newline='') as ifh:
             data_dict.pop(ticker)
 
 # Calculate Debt / Normialized EBITDA for each company for each of the 5 quarters and Cng Debt / Normalized EBITDA for the 4 periods
-with open('SP500Debt.csv', newline='', encoding='utf-8-sig') as ifH:
+with open('SP1500Debt.csv', newline='', encoding='utf-8-sig') as ifH:
     reader = csv.DictReader(ifH)
     for row in reader:
         try:
@@ -130,7 +130,7 @@ Q220ST = datetime.strptime("04/01/2020", "%m/%d/%Y")
 Q320ST = datetime.strptime("07/01/2020", "%m/%d/%Y")
 Q420ST = datetime.strptime("10/01/2020", "%m/%d/%Y")
 
-with open('SP500DatedPrices.csv', newline='', encoding='utf-8-sig') as ifh:
+with open('SP1500DatedPrices.csv', newline='', encoding='utf-8-sig') as ifh:
     reader = csv.DictReader(ifh)
     for row in reader:
         ticker = row['Symbol']
@@ -142,7 +142,7 @@ with open('SP500DatedPrices.csv', newline='', encoding='utf-8-sig') as ifh:
             data_dict[ticker]['Q320AvgP'] = statistics.mean([ float(row[date]) for date in reader.fieldnames[1:]  if datetime.strptime(date, "%m/%d/%Y") < Q420ST ])
 
 #Calculate change in equity value from share issuance (buybacks)
-with open('SP500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh:
+with open('SP1500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh:
     reader = csv.DictReader(ifh)
     for row in reader:
         ticker = row['Symbol']
@@ -169,7 +169,7 @@ with open('SP500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh
                 pass
 
 #Adjust for Dividends
-with open('SP500DividendsPerShare.csv', newline='', encoding='utf-8-sig') as ifh:
+with open('SP1500DividendsPerShare.csv', newline='', encoding='utf-8-sig') as ifh:
     reader = csv.DictReader(ifh)
     for row in reader:
         ticker = row['Symbol']
@@ -246,11 +246,8 @@ labelLines(plt.gca().get_lines())
 plt.savefig('airline_debt_cng_ebitda.png')
 
 # Print Equity Change Line Graph for Airlines
-print(data_dict["AAL"].keys())
 airline_eq_cng_sum = { ticker: {} for ticker in data_dict if data_dict[ticker]['Industry'] == 'Airlines' }
 for airline in airline_eq_cng_sum:
-    print(airline)
-    print(data_dict[airline])
     airline_eq_cng_sum[airline] = {quarters[0]: data_dict[airline]['Q4 2019 Eq Cng/EBITDA'],
                                    quarters[1]: data_dict[airline]['Q1 2020 Eq Cng/EBITDA'],
                                    quarters[2]: data_dict[airline]['Q2 2020 Eq Cng/EBITDA'],
