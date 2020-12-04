@@ -34,7 +34,7 @@ cur = con.cursor()
 # Read in each company's ticker and GICS classification info
 def read_gics(cur):
     cur.execute("CREATE TABLE gics"
-               "(symbol         TEXT, "
+               "(symbol         TEXT UNIQUE, "
                 "sector         TEXT, "
                 "industry_group TEXT, "
                 "industry       TEXT, "
@@ -46,12 +46,11 @@ def read_gics(cur):
         for row in reader:
             cur.execute("INSERT INTO gics(symbol, sector, industry_group, industry, sub_industry) "
                         "VALUES (?, ?, ?, ?, ?)", [row['Symbol'], row['GICS Sector'], row['GICS Industry Group'], row['GICS Industry'], row['GICS Sub-Industry']])
-# read_gics(cur)
 
 # Calculate Normalized EBITDA for each company
 def read_ebitda(cur):
     cur.execute("CREATE TABLE ebitda"
-               "(symbol      TEXT, "
+               "(symbol      TEXT UNIQUE, "
                 "mean_ebd FLOAT );"
                 )
     with open('SP1500EBITDA.csv', newline='', encoding='utf-8-sig') as ifh:
@@ -62,7 +61,62 @@ def read_ebitda(cur):
                 continue
             cur.execute("INSERT INTO ebitda(symbol, mean_ebd) "
                         "VALUES (?, ?)", [row['Symbol'], statistics.mean([float(row[key]) for key in row if key != 'Symbol'])])
-# read_ebitda(cur)
+
+# Read in Debt info for each company and calculate change in debt
+def read_debt(cur):
+    cur.execute("CREATE TABLE debt"
+                "(symbol TEXT UNIQUE, "
+                 "q319 FLOAT DEFAULT NULL, "
+                 "q419 FLOAT DEFAULT NULL, "
+                 "q120 FLOAT DEFAULT NULL, "
+                 "q220 FLOAT DEFAULT NULL, "
+                 "q320 FLOAT DEFAULT NULL); ")
+
+    with open('SP1500Debt.csv', newline='', encoding='utf-8-sig') as ifh:
+        reader = csv.DictReader(ifh)
+        for row in reader:
+            vals = [row['Symbol'], row['Q3 2019 Debt'], row['Q4 2019 Debt'], row['Q1 2020 Debt'], row['Q2 2020 Debt'], row['Q3 2020 Debt']]
+            for i in range(len(vals)):
+                if vals[i] == '' or vals[i] == '#N/A':
+                    vals[i] = None
+            cur.execute("INSERT INTO debt(symbol, q319, q419, q120, q220, q320) "
+                        "VALUES (?, ?, ?, ?, ?, ?)", vals)
+
+
+    cur.execute("CREATE TABLE debt_cng"
+                "(symbol TEXT UNIQUE, "
+                "q419_cng FLOAT DEFAULT NULL, "
+                "q120_cng FLOAT DEFAULT NULL, "
+                "q220_cng FLOAT DEFAULT NULL, "
+                "q320_cng FLOAT DEFAULT NULL);")
+
+    cur.execute("SELECT * from debt")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+        if None in row.values():
+            continue
+        cur.execute("INSERT INTO debt_cng(symbol, q419_cng, q120_cng, q220_cng, q320_cng) "
+                    "VALUES (?, ?, ?, ?, ?)", [row['symbol'], row['q419'] - row['q319'], row['q120'] - row['q419'], row['q220'] - row['q120'], row['q320'] - row['q220']])
+
+# Calculate Cng Debt / Normalized EBITDA for the 4 periods
+def cng_dbt_ebd(cur):
+    cur.execute("CREATE TABLE debt_cng_ebd"
+                "(symbol TEXT UNIQUE, "
+                "q419_debt_cng_ebd FLOAT DEFAULT NULL, "
+                "q120_debt_cng_ebd FLOAT DEFAULT NULL, "
+                "q220_debt_cng_ebd FLOAT DEFAULT NULL, "
+                "q320_debt_cng_ebd FLOAT DEFAULT NULL);")
+
+    cur.execute("SELECT * FROM debt_cng INNER JOIN ebitda ON debt_cng.symbol=ebitda.symbol")
+    rows = cur.fetchall()
+    for row in rows:
+        cur.execute("INSERT INTO debt_cng_ebd(symbol, q419_debt_cng_ebd, q120_debt_cng_ebd, q220_debt_cng_ebd, q320_debt_cng_ebd) "
+                    "VALUES (?, ?, ?, ?, ?)", [row['symbol'], row['q419_cng'] / row['mean_ebd'], row['q120_cng'] / row['mean_ebd'], row['q220_cng'] / row['mean_ebd'], row['q320_cng'] / row['mean_ebd']])
+
+
+
+
 
 
 data_dict = {}
@@ -73,6 +127,11 @@ unique_industries = set()
 unique_sub_industries = set()
 
 
+
+# read_gics(cur)
+# read_ebitda(cur)
+# read_debt(cur)
+# cng_dbt_ebd(cur)
 con.commit()
 exit()
 
