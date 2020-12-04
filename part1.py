@@ -24,7 +24,46 @@ def sql_connection():
     except sqlite3.Error:
         print(sqlite3.Error)
 
-cur = sql_connection().cursor()
+def strip_na(dct):
+    return {key: dct[key] for key in dct if dct[key] != "#N/A"}
+
+
+con = sql_connection()
+cur = con.cursor()
+
+# Read in each company's ticker and GICS classification info
+def read_gics(cur):
+    cur.execute("CREATE TABLE gics"
+               "(symbol         TEXT, "
+                "sector         TEXT, "
+                "industry_group TEXT, "
+                "industry       TEXT, "
+                "sub_industry   TEXT );"
+                )
+
+    with open('SP1500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
+        reader = csv.DictReader(ifh)
+        for row in reader:
+            cur.execute("INSERT INTO gics(symbol, sector, industry_group, industry, sub_industry) "
+                        "VALUES (?, ?, ?, ?, ?)", [row['Symbol'], row['GICS Sector'], row['GICS Industry Group'], row['GICS Industry'], row['GICS Sub-Industry']])
+# read_gics(cur)
+
+# Calculate Normalized EBITDA for each company
+def read_ebitda(cur):
+    cur.execute("CREATE TABLE ebitda"
+               "(symbol      TEXT, "
+                "mean_ebd FLOAT );"
+                )
+    with open('SP1500EBITDA.csv', newline='', encoding='utf-8-sig') as ifh:
+        reader = csv.DictReader(ifh)
+        for row in reader:
+            row = strip_na(row)
+            if len(row) == 1:
+                continue
+            cur.execute("INSERT INTO ebitda(symbol, mean_ebd) "
+                        "VALUES (?, ?)", [row['Symbol'], statistics.mean([float(row[key]) for key in row if key != 'Symbol'])])
+# read_ebitda(cur)
+
 
 data_dict = {}
 summary = {}
@@ -33,35 +72,11 @@ unique_industry_groups = set()
 unique_industries = set()
 unique_sub_industries = set()
 
-# Read in each company's ticker, Sector, and Industry Group
-with open('SP1500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
-    reader = csv.DictReader(ifh)
-    for row in reader:
-        data_dict[row['Symbol']] = {}
-        data_dict[row['Symbol']]['Sector'] = row['GICS Sector']
-        if row['GICS Sector'] not in unique_sectors and row['GICS Sector'] != '#N/A':
-            unique_sectors.add(row['GICS Sector'])
-        data_dict[row['Symbol']]['Industry Group'] = row['GICS Industry Group']
-        if row['GICS Industry Group'] not in unique_industry_groups and row['GICS Industry Group'] != '#N/A':
-            unique_industry_groups.add(row['GICS Industry Group'])
-        data_dict[row['Symbol']]['Industry'] = row['GICS Industry']
-        if row['GICS Industry'] not in unique_industries and row['GICS Industry'] != '#N/A':
-            unique_industries.add(row['GICS Industry'])
-        data_dict[row['Symbol']]['Sub-Industry'] = row['GICS Sub-Industry']
-        if row['GICS Sub-Industry'] not in unique_sub_industries and row['GICS Sub-Industry'] != '#N/A':
-            unique_sub_industries.add(row['GICS Sub-Industry'])
 
-# Calculate Normalized EBITDA for each company
-with open('SP1500EBITDA.csv', newline='') as ifh:
-    ifh.readline()
-    for row in ifh:
-        data = row.strip().split(',')
-        ticker = data[0]
-        data = data[1:]
-        try:
-            data_dict[ticker]['EBITDA'] = statistics.mean([float(ebitda) for ebitda in data])
-        except ValueError:
-            data_dict.pop(ticker)
+con.commit()
+exit()
+
+
 
 # Calculate Debt / Normialized EBITDA for each company for each of the 5 quarters and Cng Debt / Normalized EBITDA for the 4 periods
 with open('SP1500Debt.csv', newline='', encoding='utf-8-sig') as ifH:
