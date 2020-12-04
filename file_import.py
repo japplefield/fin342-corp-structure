@@ -30,3 +30,12 @@ def read_files(cur):
         read_equity.read_dividends(cur)
     except DBError:
         pass
+    try:
+        read_equity.calc_eq_cng(cur)
+    except DBError:
+        pass
+    try:
+        read_equity.calc_eq_cng_ebd(cur)
+    except DBError:
+        pass
+    read_equity.eq_cng_ebd_refactor(cur)

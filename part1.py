@@ -39,58 +39,6 @@ med_sector_dbt_ebd_cng = {sector: {quarter: statistics.median([row[quarter] for 
 con.commit()
 exit()
 
-#Calculate change in equity value from share issuance (buybacks)
-with open('SP1500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh:
-    reader = csv.DictReader(ifh)
-    for row in reader:
-        ticker = row['Symbol']
-        if ticker in data_dict:
-            try:
-                data_dict[ticker]['Q419EqCng'] = (float(row['Q4 2019 Shares Outstanding']) - float(row['Q3 2019 Shares Outstanding'])) * data_dict[ticker]['Q419AvgP']
-                data_dict[ticker]['Q419EndShares'] = float(row['Q4 2019 Shares Outstanding'])
-            except ValueError:
-                pass
-            try:
-                data_dict[ticker]['Q120EqCng'] = (float(row['Q1 2020 Shares Outstanding']) - float(row['Q4 2019 Shares Outstanding'])) * data_dict[ticker]['Q120AvgP']
-                data_dict[ticker]['Q120EndShares'] = float(row['Q1 2020 Shares Outstanding'])
-            except ValueError:
-                pass
-            try:
-                data_dict[ticker]['Q220EqCng'] = (float(row['Q2 2020 Shares Outstanding']) - float(row['Q1 2020 Shares Outstanding'])) * data_dict[ticker]['Q220AvgP']
-                data_dict[ticker]['Q220EndShares'] = float(row['Q2 2020 Shares Outstanding'])
-            except ValueError:
-                pass
-            try:
-                data_dict[ticker]['Q320EqCng'] = (float(row['Q3 2020 Shares Outstanding']) - float(row['Q2 2020 Shares Outstanding'])) * data_dict[ticker]['Q320AvgP']
-                data_dict[ticker]['Q320EndShares'] = float(row['Q3 2020 Shares Outstanding'])
-            except ValueError:
-                pass
-
-#Adjust for Dividends
-with open('SP1500DividendsPerShare.csv', newline='', encoding='utf-8-sig') as ifh:
-    reader = csv.DictReader(ifh)
-    for row in reader:
-        ticker = row['Symbol']
-        #﻿Symbol,Q3 2019 Dividend per Share,Q4 2019 Dividend per Share,Q1 2020 Dividend per Share,Q2 2020 Dividend per Share,Q3 2020 Dividend per Share
-        if ticker in data_dict:
-            try:
-                if row['Q4 2019 Dividend per Share'] != '#N/A':
-                    data_dict[ticker]['Q419EqCng'] -= float(row['Q4 2019 Dividend per Share']) * data_dict[ticker]['Q419EndShares']
-                data_dict[ticker]['Q4 2019 Eq Cng/EBITDA'] = data_dict[ticker]['Q419EqCng'] / data_dict[ticker]['EBITDA']
-                if row['Q1 2020 Dividend per Share'] != '#N/A':
-                    data_dict[ticker]['Q120EqCng'] -= float(row['Q1 2020 Dividend per Share']) * data_dict[ticker]['Q120EndShares']
-                data_dict[ticker]['Q1 2020 Eq Cng/EBITDA'] = data_dict[ticker]['Q120EqCng'] / data_dict[ticker]['EBITDA']
-                if row['Q2 2020 Dividend per Share'] != '#N/A':
-                    data_dict[ticker]['Q220EqCng'] -= float(row['Q2 2020 Dividend per Share']) * data_dict[ticker]['Q220EndShares']
-                data_dict[ticker]['Q2 2020 Eq Cng/EBITDA'] = data_dict[ticker]['Q220EqCng'] / data_dict[ticker]['EBITDA']
-                if row['Q3 2020 Dividend per Share'] != '#N/A':
-                    data_dict[ticker]['Q320EqCng'] -= float(row['Q3 2020 Dividend per Share']) * data_dict[ticker]['Q320EndShares']
-                data_dict[ticker]['Q3 2020 Eq Cng/EBITDA'] = data_dict[ticker]['Q320EqCng'] / data_dict[ticker]['EBITDA']
-            except KeyError:
-                pass
-            except ValueError:
-                pass
-
 # Calcuate Summary Median Equity Cng/EBITDA for each Sector
 med_eq_ebitda_cng = {}
 for sector in unique_sectors:

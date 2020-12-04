@@ -75,3 +75,61 @@ def read_dividends(cur):
                     vals[i] = None
             cur.execute("INSERT INTO dividends(symbol, Q32019, Q42019, Q12020, Q22020, Q32020) "
                         "VALUES (?, ?, ?, ?, ?, ?)", vals)
+
+# Calculate absolute change in equity for each quarter
+def calc_eq_cng(cur):
+    cur.execute("CREATE TABLE eq_cng"
+                "(symbol TEXT, "
+                "period TEXT DEFAULT NULL, "
+                "change FLOAT DEFAULT NULL);")
+
+    quarters = ['Q32019', 'Q42019', 'Q12020', 'Q22020', 'Q32020']
+    for i in range(1, len(quarters)):
+        q = ("SELECT avg_price.symbol, "
+            "avg_price.{} AS p, "
+            "shares.{} AS s1, shares.{} AS s2, "
+            "dividends.{} AS d "
+            "FROM avg_price, shares, dividends "
+            "WHERE avg_price.symbol=shares.symbol AND shares.symbol=dividends.symbol").format(*tuple([quarters[i]] + quarters[i-1:i+1] + [quarters[i]]))
+        cur.execute(q)
+        rows = cur.fetchall()
+        for row in rows:
+            if None in row.values():
+                continue
+            eq_cng = row['p'] * (row['s2'] - row['s1']) + row['d'] * row['s2']
+            cur.execute("INSERT INTO eq_cng(symbol, period, change) "
+                        "VALUES (?, ?, ?)", [row['symbol'], quarters[i], eq_cng])
+
+# Calculate normalized change in equity by mean EBITDA
+def calc_eq_cng_ebd(cur):
+    cur.execute("CREATE TABLE eq_cng_ebd"
+                "(symbol TEXT, "
+                "period TEXT DEFAULT NULL, "
+                "change FLOAT DEFAULT NULL);")
+
+    cur.execute("SELECT * from eq_cng INNER JOIN ebitda ON eq_cng.symbol = ebitda.symbol")
+    rows = cur.fetchall()
+    for row in rows:
+        cur.execute("INSERT INTO eq_cng_ebd(symbol, period, change) "
+                    "VALUES (?, ?, ?)", [row['symbol'], row['period'], row['change'] / row['mean_ebd']])
+
+def eq_cng_ebd_refactor(cur):
+    cur.execute("CREATE TABLE eq_cng_ebd_2"
+                "(symbol TEXT UNIQUE, "
+                "Q42019 FLOAT DEFAULT NULL, "
+                "Q12020 FLOAT DEFAULT NULL, "
+                "Q22020 FLOAT DEFAULT NULL, "
+                "Q32020 FLOAT DEFAULT NULL);")
+
+    cur.execute("SELECT symbol FROM eq_cng_ebd")
+    symbols = set([row['symbol'] for row in cur.fetchall()])
+    for symbol in symbols:
+        cur.execute("SELECT * FROM eq_cng_ebd WHERE symbol=?", [symbol])
+        rows = cur.fetchall()
+        changes = {row['period']: row['change'] for row in rows}
+        quarters = ['Q42019', 'Q12020', 'Q22020', 'Q32020']
+        for quarter in quarters:
+            if quarter not in changes:
+                changes[quarter] = None
+        cur.execute("INSERT INTO eq_cng_ebd_2(symbol, Q42019, Q12020, Q22020, Q32020) "
+                    "VALUES (?, ?, ?, ?, ?)", [symbol] + [changes[quarter] for quarter in quarters])
