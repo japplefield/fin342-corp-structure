@@ -6,7 +6,7 @@ import numpy
 from matplotlib import rcParams
 from labellines import labelLine, labelLines
 from datetime import datetime, timedelta
-import sqlite3
+from supersqlite import sqlite3
 rcParams['figure.figsize'] = [10, 5]
 
 def dict_factory(cursor, row):
@@ -75,7 +75,7 @@ def read_debt(cur):
     with open('SP1500Debt.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
-            vals = [row['Symbol'], row['Q3 2019 Debt'], row['Q4 2019 Debt'], row['Q1 2020 Debt'], row['Q2 2020 Debt'], row['Q3 2020 Debt']]
+            vals = list(row.values())
             for i in range(len(vals)):
                 if vals[i] == '' or vals[i] == '#N/A':
                     vals[i] = None
@@ -122,13 +122,13 @@ def read_prices(cur):
     Q320ST = datetime.strptime("07/01/2020", "%m/%d/%Y")
     Q420ST = datetime.strptime("10/01/2020", "%m/%d/%Y")
 
-    # cur.execute("CREATE TABLE avg_price"
-    #             "(symbol TEXT UNIQUE, "
-    #             "Q32019 FLOAT DEFAULT NULL, "
-    #             "Q42019 FLOAT DEFAULT NULL, "
-    #             "Q12020 FLOAT DEFAULT NULL, "
-    #             "Q22020 FLOAT DEFAULT NULL, "
-    #             "Q32020 FLOAT DEFAULT NULL);")
+    cur.execute("CREATE TABLE avg_price"
+                "(symbol TEXT UNIQUE, "
+                "Q32019 FLOAT DEFAULT NULL, "
+                "Q42019 FLOAT DEFAULT NULL, "
+                "Q12020 FLOAT DEFAULT NULL, "
+                "Q22020 FLOAT DEFAULT NULL, "
+                "Q32020 FLOAT DEFAULT NULL);")
 
     with open('SP1500DatedPrices.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
@@ -144,6 +144,50 @@ def read_prices(cur):
             cur.execute("INSERT INTO avg_price(symbol, Q32019, Q42019, Q12020, Q22020, Q32020) "
                         "VALUES (?, ?, ?, ?, ?, ?)", [ticker, Q319AvgP, Q419AvgP, Q120AvgP, Q220AvgP, Q320AvgP])
 
+
+# Read in Data on Shares Outstanding
+def read_shares(cur):
+    cur.execute("CREATE TABLE shares"
+                "(symbol TEXT UNIQUE, "
+                "Q32019 FLOAT DEFAULT NULL, "
+                "Q42019 FLOAT DEFAULT NULL, "
+                "Q12020 FLOAT DEFAULT NULL, "
+                "Q22020 FLOAT DEFAULT NULL, "
+                "Q32020 FLOAT DEFAULT NULL);")
+
+    with open('SP1500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh:
+        reader = csv.DictReader(ifh)
+        for row in reader:
+            vals = list(row.values())
+            if '#N/A' in vals:
+                continue
+            for i in range(len(vals)):
+                if vals[i] == '':
+                    vals[i] = None
+            cur.execute("INSERT INTO shares(symbol, Q32019, Q42019, Q12020, Q22020, Q32020) "
+                        "VALUES (?, ?, ?, ?, ?, ?)", vals)
+
+
+def read_dividends(cur):
+    cur.execute("CREATE TABLE dividends"
+                "(symbol TEXT UNIQUE, "
+                "Q32019 FLOAT DEFAULT NULL, "
+                "Q42019 FLOAT DEFAULT NULL, "
+                "Q12020 FLOAT DEFAULT NULL, "
+                "Q22020 FLOAT DEFAULT NULL, "
+                "Q32020 FLOAT DEFAULT NULL);")
+
+    with open('SP1500DividendsPerShare.csv', newline='', encoding='utf-8-sig') as ifh:
+        reader = csv.DictReader(ifh)
+        for row in reader:
+            vals = list(row.values())
+            for i in range(len(vals)):
+                if vals[i] == '#N/A':
+                    vals[i] = 0
+                if vals[i] == '':
+                    vals[i] = None
+            cur.execute("INSERT INTO dividends(symbol, Q32019, Q42019, Q12020, Q22020, Q32020) "
+                        "VALUES (?, ?, ?, ?, ?, ?)", vals)
 
 data_dict = {}
 summary = {}
@@ -176,7 +220,8 @@ cur.execute("SELECT * FROM debt_cng_ebd INNER JOIN gics ON debt_cng_ebd.symbol=g
 rows = cur.fetchall()
 med_sector_dbt_ebd_cng = {sector: {quarter: statistics.median([row[quarter] for row in rows]) for quarter in quarters} for sector in unique_sectors}
 
-
+# read_shares(cur)
+# read_dividends(cur)
 con.commit()
 exit()
 
