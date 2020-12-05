@@ -76,9 +76,9 @@ def read_dividends(cur):
             cur.execute("INSERT INTO dividends(symbol, Q32019, Q42019, Q12020, Q22020, Q32020) "
                         "VALUES (?, ?, ?, ?, ?, ?)", vals)
 
-# Calculate absolute change in equity for each quarter
+# Calculate absolute change in equity for each quarter, with and without dividends
 def calc_eq_cng(cur):
-    cur.execute("CREATE TABLE eq_cng"
+    cur.execute("CREATE TABLE eq_cng_w_div"
                 "(symbol TEXT, "
                 "period TEXT DEFAULT NULL, "
                 "change FLOAT DEFAULT NULL);")
@@ -97,10 +97,31 @@ def calc_eq_cng(cur):
             if None in row.values():
                 continue
             eq_cng = row['p'] * (row['s2'] - row['s1']) - row['d'] * row['s2']
-            cur.execute("INSERT INTO eq_cng(symbol, period, change) "
+            cur.execute("INSERT INTO eq_cng_w_div(symbol, period, change) "
                         "VALUES (?, ?, ?)", [row['symbol'], quarters[i], eq_cng])
 
-# Calculate normalized change in equity by mean EBITDA
+    cur.execute("CREATE TABLE eq_cng_no_div"
+                "(symbol TEXT, "
+                "period TEXT DEFAULT NULL, "
+                "change FLOAT DEFAULT NULL);")
+
+    quarters = ['Q32019', 'Q42019', 'Q12020', 'Q22020', 'Q32020']
+    for i in range(1, len(quarters)):
+        q = ("SELECT avg_price.symbol, "
+            "avg_price.{} AS p, "
+            "shares.{} AS s1, shares.{} AS s2 "
+            "FROM avg_price, shares "
+            "WHERE avg_price.symbol=shares.symbol ").format(*tuple([quarters[i]] + quarters[i-1:i+1]))
+        cur.execute(q)
+        rows = cur.fetchall()
+        for row in rows:
+            if None in row.values():
+                continue
+            eq_cng = row['p'] * (row['s2'] - row['s1'])
+            cur.execute("INSERT INTO eq_cng_no_div(symbol, period, change) "
+                        "VALUES (?, ?, ?)", [row['symbol'], quarters[i], eq_cng])
+
+# Calculate normalized change in equity (with and without dividend) by mean EBITDA
 def calc_eq_cng_ebd(cur):
     cur.execute("CREATE TABLE eq_cng_ebd"
                 "(symbol TEXT, "
