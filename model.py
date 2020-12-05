@@ -17,3 +17,5 @@ def sql_connection():
 
 def strip_na(dct):
     return {key: dct[key] for key in dct if dct[key] != "#N/A"}
+
+quarters = ('Q42019', 'Q12020', 'Q22020', 'Q32020')
