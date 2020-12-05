@@ -5,7 +5,7 @@ import numpy
 from matplotlib import rcParams
 from labellines import labelLine, labelLines
 
-rcParams['figure.figsize'] = [10, 5]
+rcParams['figure.figsize'] = [15, 10]
 
 con = model.sql_connection()
 cur = con.cursor()
@@ -31,40 +31,72 @@ unique_sub_industries = [dct['sub_industry'] for dct in rows]
 
 # Calcuate Summary Median Debt Cng/EBITDA for each Sector
 quarters = ('Q42019', 'Q12020', 'Q22020', 'Q32020')
-cur.execute("SELECT * FROM debt_cng_ebd INNER JOIN gics ON debt_cng_ebd.symbol=gics.symbol")
-rows = cur.fetchall()
-med_sector_dbt_ebd_cng = {sector: {quarter: statistics.median([row[quarter] for row in rows]) for quarter in quarters} for sector in unique_sectors}
-
-
-con.commit()
-exit()
-
-# Calcuate Summary Median Equity Cng/EBITDA for each Sector
-med_eq_ebitda_cng = {}
+med_sector_dbt_ebd_cng = {}
 for sector in unique_sectors:
-    med_eq_ebitda_cng[sector] = {}
-    med_eq_ebitda_cng[sector]['Q4 2019'] = statistics.median([data_dict[ticker]['Q4 2019 Eq Cng/EBITDA'] for ticker in data_dict if data_dict[ticker]['Sector'] == sector and 'Q4 2019 Eq Cng/EBITDA' in data_dict[ticker]])
-    med_eq_ebitda_cng[sector]['Q1 2020'] = statistics.median([data_dict[ticker]['Q1 2020 Eq Cng/EBITDA'] for ticker in data_dict if data_dict[ticker]['Sector'] == sector and 'Q1 2020 Eq Cng/EBITDA' in data_dict[ticker]])
-    med_eq_ebitda_cng[sector]['Q2 2020'] = statistics.median([data_dict[ticker]['Q2 2020 Eq Cng/EBITDA'] for ticker in data_dict if data_dict[ticker]['Sector'] == sector and 'Q2 2020 Eq Cng/EBITDA' in data_dict[ticker]])
-    med_eq_ebitda_cng[sector]['Q3 2020'] = statistics.median([data_dict[ticker]['Q3 2020 Eq Cng/EBITDA'] for ticker in data_dict if data_dict[ticker]['Sector'] == sector and 'Q3 2020 Eq Cng/EBITDA' in data_dict[ticker]])
+    cur.execute("SELECT * FROM debt_cng_ebd INNER JOIN gics ON debt_cng_ebd.symbol=gics.symbol WHERE gics.sector=?", [sector])
+    rows = cur.fetchall()
+    med_sector_dbt_ebd_cng[sector] = {quarter: statistics.median([row[quarter] for row in rows]) for quarter in quarters}
 
-#Print Equity Change Line Graph by GICS Sector
+# Calculate Summary Median Eq Cng / EBITDA for each sector
+med_sector_eq_ebd_cng = {}
+for sector in unique_sectors:
+    cur.execute("SELECT * FROM eq_cng_ebd_2 INNER JOIN gics ON eq_cng_ebd_2.symbol=gics.symbol WHERE gics.sector=?", [sector])
+    rows = cur.fetchall()
+    med_sector_eq_ebd_cng[sector] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in quarters}
+
+# Draw up For Airlines
+cur.execute("SELECT * FROM eq_cng_ebd_2 INNER JOIN gics ON eq_cng_ebd_2.symbol=gics.symbol WHERE gics.industry='Airlines'")
+airlines_eq_ebd_cng = cur.fetchall()
+cur.execute("SELECT * FROM debt_cng_ebd INNER JOIN gics ON debt_cng_ebd.symbol=gics.symbol WHERE gics.industry='Airlines'")
+airlines_debt_ebd_cng = cur.fetchall()
+
+# Close Database
+con.commit()
+
+#Print Debt Change Line Graph by GICS sector
 NUM_COLORS = len(unique_sectors)
 cm = plt.get_cmap('gist_rainbow')
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_prop_cycle('color', [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)])
 plt.xticks(numpy.arange(4), quarters)
-plt.ylim(-0.15, 0.02)
+plt.ylim(-0.15, 0.5)
 for sector in unique_sectors:
-    plt.plot(range(4), [med_eq_ebitda_cng[sector][quarter] for quarter in quarters],  label=sector)
+    plt.plot(range(4), [med_sector_dbt_ebd_cng[sector][quarter] for quarter in quarters],  label=sector)
+plt.xlabel('Quarter')
+plt.ylabel('Median Debt Change/Normalized EBITDA')
+plt.title('Median Debt Change/Normalized EBITDA by Sector')
+plt.tight_layout()
+labelLines(plt.gca().get_lines())
+plt.savefig('med_debt_cng_ebitda_new.png')
+
+#Print Equity Change Line Graph by GICS sector
+NUM_COLORS = len(unique_sectors)
+cm = plt.get_cmap('gist_rainbow')
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.set_prop_cycle('color', [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)])
+plt.xticks(numpy.arange(4), quarters)
+plt.ylim(-0.1, 0.02)
+for sector in unique_sectors:
+    plt.plot(range(4), [med_sector_eq_ebd_cng[sector][quarter] for quarter in quarters],  label=sector)
 plt.xlabel('Quarter')
 plt.ylabel('Median Equity Change/Normalized EBITDA')
 plt.title('Median Equity Change/Normalized EBITDA by Sector')
-# plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
 plt.tight_layout()
 labelLines(plt.gca().get_lines())
-plt.savefig('med_eq_cng_ebitda.png')
+plt.savefig('med_eq_cng_ebitda_new.png')
+
+exit()
+
+#Print Equity Change Line Graph by GICS Sector
+
+
+
+
+
+# plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+
 
 # Print Debt Change Line Graph for Airlines
 airline_debt_cng_sum = { ticker: {} for ticker in data_dict if data_dict[ticker]['Industry'] == 'Airlines' }

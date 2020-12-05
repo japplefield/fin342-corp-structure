@@ -96,7 +96,7 @@ def calc_eq_cng(cur):
         for row in rows:
             if None in row.values():
                 continue
-            eq_cng = row['p'] * (row['s2'] - row['s1']) + row['d'] * row['s2']
+            eq_cng = row['p'] * (row['s2'] - row['s1']) - row['d'] * row['s2']
             cur.execute("INSERT INTO eq_cng(symbol, period, change) "
                         "VALUES (?, ?, ?)", [row['symbol'], quarters[i], eq_cng])
 
