@@ -5,7 +5,7 @@ import numpy
 from matplotlib import rcParams
 from labellines import labelLine, labelLines
 
-rcParams['figure.figsize'] = [25, 10]
+rcParams['figure.figsize'] = [10, 10]
 
 con = model.sql_connection()
 cur = con.cursor()
@@ -22,10 +22,25 @@ for sector in unique_sectors:
     cur.execute("SELECT * FROM eq_cng_tot_ebd_2 INNER JOIN gics ON eq_cng_tot_ebd_2.symbol=gics.symbol WHERE gics.sector=?", [sector])
     rows = cur.fetchall()
     meds[sector] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    plt.bar(numpy.arange(len(meds[sector].values())), meds[sector].values(), align='center')
+    plt.xlabel('Quarter')
+    plt.ylabel('Median Equity Change / Normalized EBITDA')
+    plt.title(f'Median Quarterly Equity Change / Normalized EBITDA for {sector}')
+    plt.xticks(numpy.arange(len(meds[sector].values())), model.quarters)
+    plt.ylim(-0.1, 0.015)
+    ax = plt.gca()
+    ax.spines["bottom"].set_position(("data", 0))
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    plt.savefig(f'Equity Bar Charts/med_eq_cng_ebitda_{sector}.png')
+
 
 # Close Database
 con.commit()
 
+rcParams['figure.figsize'] = [25, 10]
 x = numpy.arange(len(unique_sectors))
 width = 0.2
 fig, ax = plt.subplots()
@@ -39,4 +54,4 @@ ax.set_title('Median Equity Change / EBITDA by Sector, Last 4 Quarters')
 ax.set_xticks(x)
 ax.set_xticklabels(unique_sectors)
 ax.legend()
-plt.savefig('sum.png')
+plt.savefig('Equity Bar Charts/med_eq_cng_ebitda_all.png')
