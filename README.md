@@ -32,11 +32,11 @@ git clone https://github.com/japplefield/fin342-corp-structure
 ``
 
 Next, simply run the gen_graphs script:
-``bash
+```bash
 ./gen_graphs
-``
+```
 
 To generate the database without generating graphs, run the file_import script:
-``bash
+```bash
 ./file_import.py
-``
+```
