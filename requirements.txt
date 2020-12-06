@@ -1,0 +1,6 @@
+#
+###### requirements.txt for fin342-proj ######
+#
+numpy
+matplotlib
+matplotlib-label-lines

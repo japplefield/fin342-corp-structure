@@ -27,9 +27,16 @@ An extension to this analysis would be to determine whether there is a relations
 
 ## Setup
 To run this project on your machine, first clone the repository:
-``bash
+```bash
 git clone https://github.com/japplefield/fin342-corp-structure
-``
+```
+
+Create a virtual environment and install the required libraries:
+```bash
+python -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+```
 
 Next, simply run the gen_graphs script:
 ```bash
