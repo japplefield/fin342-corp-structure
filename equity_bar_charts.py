@@ -25,15 +25,22 @@ for sector in unique_sectors:
     fig = plt.figure()
     ax = fig.add_subplot(111)
     plt.bar(numpy.arange(len(meds[sector].values())), meds[sector].values(), align='center')
-    plt.xlabel('Quarter')
     plt.ylabel('Median Equity Change / Normalized EBITDA')
-    plt.title(f'Median Quarterly Equity Change / Normalized EBITDA for {sector}')
+    ax.text(0.5, -0.05, f'Median Quarterly Equity Change / Normalized EBITDA for {sector}', ha="center", va="top", transform=ax.transAxes)
     plt.xticks(numpy.arange(len(meds[sector].values())), model.quarters)
     plt.ylim(-0.1, 0.015)
     ax = plt.gca()
+    ax.set_xticklabels([])
     ax.spines["bottom"].set_position(("data", 0))
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+    label_offset = 0.005
+    for quarter, (x_position, y_position) in zip(model.quarters, enumerate(meds[sector].values())):
+        if y_position > 0:
+            label_y = -label_offset
+        else:
+            label_y = y_position - label_offset
+        ax.text(x_position, label_y, quarter, ha="center", va="top")
     plt.savefig(f'Equity Bar Charts/med_eq_cng_ebitda_{sector}.png')
 
 
