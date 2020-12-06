@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import model
 import read_meta, read_debt, read_equity
 from sqlite3 import OperationalError as DBError

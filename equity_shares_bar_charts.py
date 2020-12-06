@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import model
 import statistics
 import matplotlib.pyplot as plt
