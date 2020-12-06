@@ -31,8 +31,9 @@ To run this project on your machine, first clone the repository:
 git clone https://github.com/japplefield/fin342-corp-structure
 ```
 
-Create a virtual environment and install the required libraries:
+Change into the cloned directory and create a virtual environment and install the required libraries:
 ```bash
+cd fin342-corp-structure/
 python -m venv env
 source env/bin/activate
 pip install -r requirements.txt
