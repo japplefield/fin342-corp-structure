@@ -9,40 +9,40 @@ def read_files(cur):
         pass
     try:
         read_meta.read_ebitda(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_debt.read_debt(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_debt.cng_dbt_ebd(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_equity.read_prices(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_equity.read_shares(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_equity.read_dividends(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_equity.calc_eq_cng(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_equity.calc_eq_cng_ebd(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
     try:
         read_equity.eq_cng_ebd_refactor(cur)
-    except DBError:
-        pass
+    except DBError as e:
+        print(e.args[0])
 
 if __name__ == '__main__':
     con = model.sql_connection()

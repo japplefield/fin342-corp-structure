@@ -22,6 +22,9 @@ for sector in unique_sectors:
     rows = cur.fetchall()
     med_sector_dbt_ebd_cng[sector] = {quarter: statistics.median([row[quarter] for row in rows]) for quarter in model.quarters}
 
+# Calculate Summary Median 
+
+
 # Calculate Summary Median Eq Cng / EBITDA for each sector
 med_sector_eq_ebd_cng = {}
 for sector in unique_sectors:
