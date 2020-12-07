@@ -1,0 +1,1 @@
+pandoc README.md -s -o test1.latex -V geometry:margin=1in --highlight-style style.theme -f gfm -V linkcolor:blue --lua-filter=pagebreak.lua --include-in-header titlesec.tex --variable subparagraph
