@@ -1,19 +1,11 @@
-./file_import.py
+./handle_data/file_import.py
 
 mkdir 'Debt Bar Charts'
-./debt_bar_charts.py
-
 mkdir 'Debt Cumulative Line Charts'
-./debt_cumulative_line_graphs.py
-
 mkdir 'Equity Bar Charts'
-for FILE in $(ls | egrep '^equity(.+)bar')
-do
-    ./$FILE
-done
-
 mkdir 'Equity Cumulative Line Charts'
-for FILE in $(ls | egrep '^equity(.+)cumulative')
+
+for FILE in $(ls summary_graphs/ | egrep '*.py')
 do
-    ./$FILE
+    ./summary_graphs/$FILE
 done

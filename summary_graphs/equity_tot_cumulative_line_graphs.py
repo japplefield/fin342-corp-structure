@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import sys
+sys.path.insert(1, 'handle_data/')
 import model
 import statistics
 import matplotlib.pyplot as plt
