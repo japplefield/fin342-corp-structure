@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(1, 'handle_data/')
 import statistics
 import model
 import matplotlib.pyplot as plt
@@ -107,6 +109,9 @@ q1 = ax.bar(x - 0.5*width, [debt_cng_ebd[airline][model.quarters[1]] for airline
 q2 = ax.bar(x + 0.5*width, [debt_cng_ebd[airline][model.quarters[2]] for airline in debt_cng_ebd], width, label=model.quarters[2])
 q3 = ax.bar(x + 1.5*width, [debt_cng_ebd[airline][model.quarters[3]] for airline in debt_cng_ebd], width, label=model.quarters[3])
 ax.axhline(color='black')
+ax.axhline(color='black')
+for i in range(len(debt_cng_ebd) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
 ax.set_ylabel('Airline Debt Change / EBITDA')
 ax.set_title('Airline Debt Change / EBITDA Last 4 Quarters')
 ax.set_xticks(x)
@@ -122,6 +127,9 @@ q1 = ax.bar(x - 0.5*width, [eq_cng_tot_ebd[airline][model.quarters[1]] for airli
 q2 = ax.bar(x + 0.5*width, [eq_cng_tot_ebd[airline][model.quarters[2]] for airline in eq_cng_tot_ebd], width, label=model.quarters[2])
 q3 = ax.bar(x + 1.5*width, [eq_cng_tot_ebd[airline][model.quarters[3]] for airline in eq_cng_tot_ebd], width, label=model.quarters[3])
 ax.axhline(color='black')
+ax.axhline(color='black')
+for i in range(len(eq_cng_tot_ebd) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
 ax.set_ylabel('Airline Equity Change / EBITDA')
 ax.set_title('Airline Equity Change / EBITDA Last 4 Quarters')
 ax.set_xticks(x)
@@ -137,6 +145,9 @@ q1 = ax.bar(x - 0.5*width, [eq_cng_divs_ebd[airline][model.quarters[1]] for airl
 q2 = ax.bar(x + 0.5*width, [eq_cng_divs_ebd[airline][model.quarters[2]] for airline in eq_cng_divs_ebd], width, label=model.quarters[2])
 q3 = ax.bar(x + 1.5*width, [eq_cng_divs_ebd[airline][model.quarters[3]] for airline in eq_cng_divs_ebd], width, label=model.quarters[3])
 ax.axhline(color='black')
+ax.axhline(color='black')
+for i in range(len(eq_cng_divs_ebd) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
 ax.set_ylabel('Airline Equity Change from Dividends / EBITDA')
 ax.set_title('Airline Equity Change from Dividends / EBITDA Last 4 Quarters')
 ax.set_xticks(x)
@@ -152,6 +163,9 @@ q1 = ax.bar(x - 0.5*width, [eq_cng_shares_ebd[airline][model.quarters[1]] for ai
 q2 = ax.bar(x + 0.5*width, [eq_cng_shares_ebd[airline][model.quarters[2]] for airline in eq_cng_shares_ebd], width, label=model.quarters[2])
 q3 = ax.bar(x + 1.5*width, [eq_cng_shares_ebd[airline][model.quarters[3]] for airline in eq_cng_shares_ebd], width, label=model.quarters[3])
 ax.axhline(color='black')
+ax.axhline(color='black')
+for i in range(len(eq_cng_shares_ebd) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
 ax.set_ylabel('Airline Equity Change from Share Issuance (Repurchase) / EBITDA')
 ax.set_title('Airline Equity Change from Share Issuance (Repurchase) / EBITDA Last 4 Quarters')
 ax.set_xticks(x)
