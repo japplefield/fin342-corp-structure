@@ -5,3 +5,7 @@ env/
 *.db
 *.pdf
 __pycache__/
+*.latex
+*.log
+*.out
+*.docx
