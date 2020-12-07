@@ -59,6 +59,9 @@ q1 = ax.bar(x - 0.5*width, [meds[sector][model.quarters[1]] for sector in meds],
 q2 = ax.bar(x + 0.5*width, [meds[sector][model.quarters[2]] for sector in meds], width, label=model.quarters[2])
 q3 = ax.bar(x + 1.5*width, [meds[sector][model.quarters[3]] for sector in meds], width, label=model.quarters[3])
 ax.axhline(color='black')
+for i in range(len(unique_sectors) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
+
 ax.set_ylabel('Median Debt Change / EBITDA')
 ax.set_title('Median Debt Change / EBITDA by Sector, Last 4 Quarters')
 ax.set_xticks(x)

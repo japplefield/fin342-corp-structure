@@ -55,12 +55,13 @@ x = numpy.arange(len(unique_sectors))
 width = 0.2
 fig, ax = plt.subplots()
 ax.axhline(color='black')
+ax.axhline(color='black')
+for i in range(len(unique_sectors) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
 q4 = ax.bar(x - 1.5*width, [meds[sector][model.quarters[0]] for sector in meds], width, label=model.quarters[0])
 q1 = ax.bar(x - 0.5*width, [meds[sector][model.quarters[1]] for sector in meds], width, label=model.quarters[1])
 q2 = ax.bar(x + 0.5*width, [meds[sector][model.quarters[2]] for sector in meds], width, label=model.quarters[2])
 q3 = ax.bar(x + 1.5*width, [meds[sector][model.quarters[3]] for sector in meds], width, label=model.quarters[3])
-
-# ax.spines["bottom"].set_position(("data", 0))
 ax.set_ylabel('Median Equity Change Attributable to Share Issuance (Repurchase)/ EBITDA')
 ax.set_title('Median Equity Change Attributable to Share Issuance (Repurchase) / EBITDA by Sector, Last 4 Quarters')
 ax.set_xticks(x)
