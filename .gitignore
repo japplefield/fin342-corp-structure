@@ -3,4 +3,5 @@ env/
 *.doc*
 *.xls*
 *.db
+*.pdf
 __pycache__/
