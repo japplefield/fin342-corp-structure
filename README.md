@@ -46,13 +46,6 @@ Sample SQL and Python code can be found in [Appendix A](#appendix-a-sample-code)
 
 
 
-
-```{=latex}
-\newpage
-```
-
-
-
 ## Appendix A: Sample Code
 
 ### Sample Database Schema
@@ -133,10 +126,6 @@ plt.ylabel('Median Cumulative Debt Change/Normalized EBITDA')
 plt.title('Median Cumulative Debt Change/Normalized EBITDA by Sector')
 plt.tight_layout()
 labelLines(plt.gca().get_lines())
-```
-
-```{=latex}
-\newpage
 ```
 
 
