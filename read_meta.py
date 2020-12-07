@@ -11,7 +11,7 @@ def read_gics(cur):
                 "sub_industry   TEXT );"
                 )
 
-    with open('SP1500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
+    with open('sp1500_data/SP1500GICS.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
             cur.execute("INSERT INTO gics(symbol, sector, industry_group, industry, sub_industry) "
@@ -23,7 +23,7 @@ def read_ebitda(cur):
                "(symbol      TEXT UNIQUE, "
                 "mean_ebd FLOAT );"
                 )
-    with open('SP1500EBITDA.csv', newline='', encoding='utf-8-sig') as ifh:
+    with open('sp1500_data/SP1500EBITDA.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
             row = model.strip_na(row)

@@ -36,6 +36,7 @@ for sector in unique_sectors:
     plt.plot(range(5), [0] + [sum(list(med_sector_eq_cng_divs_ebd[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector, color=cm(1.*i/NUM_COLORS))
     i += 1
     plt.xlabel('Quarter')
+    ax.axhline(color='black')
     plt.ylabel('Median Cumulative Equity Change from Dividends/Normalized EBITDA')
     plt.title(f'Median Cumulative Equity Change from Dividends/Normalized EBITDA for {sector}')
     plt.tight_layout()
@@ -54,6 +55,7 @@ plt.ylim(-0.6, 0.05)
 for sector in unique_sectors:
     plt.plot(range(5), [0] + [sum(list(med_sector_eq_cng_divs_ebd[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector)
 plt.xlabel('Quarter')
+ax.axhline(color='black')
 plt.ylabel('Median Cumulative Equity Change from Dividends/Normalized EBITDA')
 plt.title('Median Cumulative Equity Change from Dividends/Normalized EBITDA by Sector')
 plt.tight_layout()

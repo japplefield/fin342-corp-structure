@@ -9,7 +9,7 @@ def read_debt(cur):
                  "Q22020 FLOAT DEFAULT NULL, "
                  "Q32020 FLOAT DEFAULT NULL); ")
 
-    with open('SP1500Debt.csv', newline='', encoding='utf-8-sig') as ifh:
+    with open('sp1500_data/SP1500Debt.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
             vals = list(row.values())

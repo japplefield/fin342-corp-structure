@@ -36,6 +36,7 @@ for sector in unique_sectors:
     plt.plot(range(5), [0] + [sum(list(med_sector_dbt_ebd_cng[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector, color=cm(1.*i/NUM_COLORS))
     i += 1
     plt.xlabel('Quarter')
+    ax.axhline(color='black')
     plt.ylabel('Median Cumulative Debt Change/Normalized EBITDA')
     plt.title(f'Median Cumulative Debt Change/Normalized EBITDA for {sector}')
     plt.tight_layout()
@@ -53,6 +54,7 @@ plt.ylim(-0.15, 0.5)
 for sector in unique_sectors:
     plt.plot(range(5), [0] + [sum(list(med_sector_dbt_ebd_cng[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector)
 plt.xlabel('Quarter')
+ax.axhline(color='black')
 plt.ylabel('Median Cumulative Debt Change/Normalized EBITDA')
 plt.title('Median Cumulative Debt Change/Normalized EBITDA by Sector')
 plt.tight_layout()

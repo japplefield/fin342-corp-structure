@@ -17,7 +17,7 @@ def read_prices(cur):
                 "Q22020 FLOAT DEFAULT NULL, "
                 "Q32020 FLOAT DEFAULT NULL);")
 
-    with open('SP1500DatedPrices.csv', newline='', encoding='utf-8-sig') as ifh:
+    with open('sp1500_data/SP1500DatedPrices.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
             if '#N/A' in row.values():
@@ -42,7 +42,7 @@ def read_shares(cur):
                 "Q22020 FLOAT DEFAULT NULL, "
                 "Q32020 FLOAT DEFAULT NULL);")
 
-    with open('SP1500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh:
+    with open('sp1500_data/SP1500SharesOutstanding.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
             vals = list(row.values())
@@ -64,7 +64,7 @@ def read_dividends(cur):
                 "Q22020 FLOAT DEFAULT NULL, "
                 "Q32020 FLOAT DEFAULT NULL);")
 
-    with open('SP1500DividendsPerShare.csv', newline='', encoding='utf-8-sig') as ifh:
+    with open('sp1500_data/SP1500DividendsPerShare.csv', newline='', encoding='utf-8-sig') as ifh:
         reader = csv.DictReader(ifh)
         for row in reader:
             vals = list(row.values())

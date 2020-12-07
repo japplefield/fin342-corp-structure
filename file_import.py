@@ -45,6 +45,10 @@ def read_files(cur):
     except DBError as e:
         print(e.args[0])
 
+
+
+
+
 if __name__ == '__main__':
     con = model.sql_connection()
     cur = con.cursor()
