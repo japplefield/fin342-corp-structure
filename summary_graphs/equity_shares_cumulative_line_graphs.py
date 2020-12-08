@@ -8,7 +8,7 @@ import numpy
 from matplotlib import rcParams
 from labellines import labelLine, labelLines
 
-rcParams['figure.figsize'] = [15, 10]
+rcParams['figure.figsize'] = [12, 7]
 
 con = model.sql_connection()
 cur = con.cursor()
