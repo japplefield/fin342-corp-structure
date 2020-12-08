@@ -47,14 +47,10 @@ I computed a normalized EBITDA using 2015-2019 annual EBITDA for each company. I
 * Dividend payment
 
 Equity value from share issuance or buybacks was calculated as:
-$$
-\Delta \text{Eq} = \text{Quarterly Avg Price} \times \Delta \text{Shares Outstanding}
-$$
+$\Delta \text{Eq} = \text{Quarterly Avg Price} \times \Delta \text{Shares Outstanding}$
 The result from the above equation is positive for share issuance and negative for share repurchase.
 Equity value from dividend payments was calculated as:
-$$
-\Delta \text{Eq} = -1 \times \text{Dividends per Share} \times \text{Shares Outstanding}
-$$
+$\Delta \text{Eq} = -1 \times \text{Dividends per Share} \times \text{Shares Outstanding}$
 The result from the above equation is always negative.
 
 I then computed the following ratios for each company on December 31, 2019, March 31, 2020, June 30, 2020 and September 30, 2020:
@@ -76,13 +72,8 @@ Sample SQL and Python code can be found in [Appendix A](#appendix-a-sample-code)
 After calculating the above four ratios for all 1322 companies with complete data, I calculated medians for each of the 11 GICS Sectors for each of the past four quarters. These medians are graphed below:
 
 
-![](https://user-images.githubusercontent.com/11810237/101541807-e8833c80-396f-11eb-8811-080969cf3ffb.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101541818-eb7e2d00-396f-11eb-9f71-963b9fd73adc.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101541828-ee791d80-396f-11eb-8066-07fbaf67d04e.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101541832-ef11b400-396f-11eb-9009-93066ba410ea.png){ width=50% }
-\begin{figure}[!h]
-\caption{The median ratios for each of the 11 GICS Sectors Q4 2019 to Q3 2020}
-\end{figure}
+![](https://user-images.githubusercontent.com/11810237/101541807-e8833c80-396f-11eb-8811-080969cf3ffb.png) ![](https://user-images.githubusercontent.com/11810237/101541818-eb7e2d00-396f-11eb-9f71-963b9fd73adc.png)
+![](https://user-images.githubusercontent.com/11810237/101541828-ee791d80-396f-11eb-8066-07fbaf67d04e.png) ![](https://user-images.githubusercontent.com/11810237/101541832-ef11b400-396f-11eb-9009-93066ba410ea.png)
 
 Some notable conclusions can be drawn from the above graphs. First, a lot of firms continued to pay dividends despite the financial strain on the economy as a whole. The median real estate firm paid out approximately 0.13x its annual EBITDA as a dividend at the end of each of the studied quarters. Part of this could be attributable to SEC requirements that real estate investment trusts (REITs) must pay out 90% of their taxable income annually in the form of dividends.[^2] The amount of equity raised from share issuance trended upwards over the past four quarters. Sectors like information technology and health care both saw sharp increases equity raised by share issuance in Q3 2020. Perhaps the most important takeaway from the above graphs is that the magnitude of capital raised by issuing debt, on average, far exceeded that of capital raised by issuing equity. The median consumer discretionary and real estate firm both issued debt on the order of 0.4-0.5x their annual EBITDA during just Q1 2020. While this could be a sign of financial distress due to COVID, it could also be a result of the incredibly low cost of borrowing.
 
@@ -91,40 +82,25 @@ Some notable conclusions can be drawn from the above graphs. First, a lot of fir
 ### Cumulative Change in Debt and Equity
 Next, I graphed the running sum of each of the four ratios to quantify cumulative effect of changes in debt and equity across the past four quarters, holding levels at the end of Q3 2019 as the "0." The graphs are below:
 
-![](https://user-images.githubusercontent.com/11810237/101541916-0650a180-3970-11eb-964d-ed667ad1011e.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101541927-0a7cbf00-3970-11eb-9048-07e309bf49f9.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101541929-0a7cbf00-3970-11eb-8c6c-fd76830e9c03.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101541930-0a7cbf00-3970-11eb-9031-84b666ce8f15.png){ width=50% }
-\begin{figure}[!h]
-\caption{The median cumulative sum of the four ratios for each of the 11 GICS Sectors}
-\end{figure}
+![](https://user-images.githubusercontent.com/11810237/101541916-0650a180-3970-11eb-964d-ed667ad1011e.png) ![](https://user-images.githubusercontent.com/11810237/101541927-0a7cbf00-3970-11eb-9048-07e309bf49f9.png)
+![](https://user-images.githubusercontent.com/11810237/101541929-0a7cbf00-3970-11eb-8c6c-fd76830e9c03.png) ![](https://user-images.githubusercontent.com/11810237/101541930-0a7cbf00-3970-11eb-9031-84b666ce8f15.png)
 
 One key takeaway from the above charts is that although some firms are issuing a substantial amount of shares, on average the decrease in total equity attributable to dividends is much larger quarter over quarter, to the extent that firms have much less equity financed now than they did a year ago. On the debt side, in many sectors firms took on a lot of debt at the start of 2020 and have since reduced their debt amounts by quite a bit. The net result of these two effects is that the median firm today has cumulatively paid out approximately as much in dividends as it has taken on in debt over the past year.
 
 ### Industries of Particular Interest
 The COVID-19 pandemic has had a profound impact on consumer habits. Particularly, travel for both business and leisure has decreased substantially as it was perceived as unsafe and other countries imposed entry restrictions, and e-commerce has grown as consumers have feared going to brick-and-mortar stores. Therefore, I decided it would be interesting to look specifically and the change in debt and equity for firms in the Airlines, Hotels Resorts & Cruise Lines, and Internet & Direct Marketing Retail GICS Sub-Industries.
 
-![](https://user-images.githubusercontent.com/11810237/101441871-19b82a00-38e8-11eb-99d9-512d7c5ce199.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101441872-1a50c080-38e8-11eb-8ff2-85b3cb8d7e91.png){ width=50% }
-\begin{figure}[!h]
-\caption{Cumulative change in debt and equity for Airlines}
-\end{figure}
+![](https://user-images.githubusercontent.com/11810237/101441871-19b82a00-38e8-11eb-99d9-512d7c5ce199.png) ![](https://user-images.githubusercontent.com/11810237/101441872-1a50c080-38e8-11eb-8ff2-85b3cb8d7e91.png)
+
 
 The above charts show the cumulative change in debt and equity for Airlines over the past year. While some airlines have seen a cumulative decrease in equity (largely due to payment of dividends) over the past year on the order of 0.1x annual EBITDA, some (Southwest, United, and American) have issued shares, and nearly all have taken on debt, with some (JetBlue and Delta) taking on debt in excess of 2.0x annual EBITDA over the past year. I interpret this to be a sign of financial distress for the airline industry, as they are turning to all possible avenues to raise capital rather than just re-levering. This idea is supported by the notion that, with business and leisure air travel and recent lows, airlines would feel severe amounts of financial stress.
 
-![](https://user-images.githubusercontent.com/11810237/101441897-2b013680-38e8-11eb-9037-43d097ea1e91.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101441899-2b013680-38e8-11eb-85b1-08ecbfbb13dc.png){ width=50% }
-\begin{figure}[!h]
-\caption{Cumulative change in debt and equity for Hotels Resorts \& Cruise Lines}
-\end{figure}
+![](https://user-images.githubusercontent.com/11810237/101441897-2b013680-38e8-11eb-9037-43d097ea1e91.png) ![](https://user-images.githubusercontent.com/11810237/101441899-2b013680-38e8-11eb-85b1-08ecbfbb13dc.png)
 
 The above charts show the cumulative change in debt and equity for hotels, resorts, and cruise lines over the past year. Dividends were paid by many firms in Q4 2019 and Q1 2020 but did not make payments in Q2 and Q3 2020. There was also lots of debt accumulation in Q1 2020, likely due to the lower cost of borrowing. While some companies in this sub-industry kept debt level for the past two quarters, cruise lines took on even more debt in Q2 and Q3, while some companies were able to pay a little off like Marriott and Choice Hotels. The reduction in debt for hotel chains could be attributable to just maturing obligations, or could be due to the fact that of all the travel related categories, hotels are able to best cope with the reduced demand because they can take advantage of trends like increases in road tripping and domestic travel, can cope with decreased business travel, and can maintain a standard of cleanliness better than airlines or cruise lines. Some firms, like the cruise lines, did issue shares in addition to taking on more debt, possibly because it is hard to get good rates on all offered debt due to intrinsic business risk. Eventually it becomes cheaper to issue more shares than to take on debt. For all firms in this sub-industry, the increase in debt is much larger than the decrease in equity from dividend payments.
 
-![](https://user-images.githubusercontent.com/11810237/101441916-33597180-38e8-11eb-8ca3-8ef6d26b2c92.png){ width=50% }
-![](https://user-images.githubusercontent.com/11810237/101441914-32c0db00-38e8-11eb-9491-566f17611b79.png){ width=50% }
-\begin{figure}[!h]
-\caption{Cumulative change in debt and equity for Internet \& Direct Marketing Retail}
-\end{figure}
+![](https://user-images.githubusercontent.com/11810237/101441916-33597180-38e8-11eb-8ca3-8ef6d26b2c92.png) ![](https://user-images.githubusercontent.com/11810237/101441914-32c0db00-38e8-11eb-9491-566f17611b79.png)
+
 
 The above charts show the cumulative change in debt and equity for internet & direct marketing retail. Based on the charts, the typical internet & direct marketing retail firm did not need to take on much debt, but companies that rely on travel (like Expedia) did. Some companies issued quite a lot of shares. Amazon, for example, likely issued shares in addition to issuing debt because their share price is so high that they can get a lot of value for issuing shares without diluting their equity by much. Meanwhile, eBay bought back shares in Q1 2020 before the pandemic hit in connection with their sale of Stubhub.[^3] It makes sense that eBay has not further changed their capital structure since the share repurchase, as they are a firm that would be expected to maintain stability during the pandemic; as more people have free time and need extra cash they might turn to eBay to make extra cash. The typical firm in this sub-industry did not change their capital structure much, probably because this is a stable sub-industry that benefited marginally from COVID but ultimately received little impact.
 
@@ -134,7 +110,7 @@ The above charts show the cumulative change in debt and equity for internet & di
 
 The data support the idea that firms would take advantage of low interest rates and take on more debt while continuing to pay out dividends. On the scale of the whole market, this seems to be what happened, which could be interpreted as a signal that the average firm has financially not reacted much to any direct effects of the pandemic, and instead has reacted to governmental intervention like the lowering of rates that came at the same time the pandemic hit. Sub-industries that are directly and negatively affected by changing consumer behavior due to the pandemic, such as airlines, hotels, resorts, and cruise lines, have both taken on debt and issued shares. This supports the notion that if rates are low, firms would take on as much debt as they can until it is cheaper to take on equity, and then if they still need more cash to obtain it through issuing shares. This excess need for cash could be interpreted as a signal that these firms are in a state of financial distress, as they needed cash but were not able to get sufficient cash at efficient interest rates and/or feel unconfident in their future ability to pay off debt. Therefore, I believe there could be a high correlation between share issuance and financial distress, at least during the COVID-19 pandemic.
 
-\newpage
+
 
 ## Appendix A: Summary Tables
 
@@ -172,7 +148,7 @@ Table 2: Median change in Equity Value/normalized EBITDA by GICS sector
 | Energy                 | -0.03447 | -0.01851 | -0.00115 | -0.0001  |
 | **All**                |**-0.04269**|**-0.03195**|**-0.03288**|**-0.00635**|
 
-\newpage
+
 
 Table 3: Median change in Equity Value attributable to dividend payments/normalized EBITDA by GICS sector
 
@@ -208,7 +184,7 @@ Table 4: Median change in Equity Value attributable to share issuance or repurch
 | Energy                 | -0.00019  | 0.004086 | 2.24E-05 | 0.002168 |
 | **All**                |**0.000258**|**0.003568**|**0.000685**|**0.005508**|
 
-\newpage
+
 
 ## Appendix B: Sample Code
 
@@ -250,7 +226,7 @@ FROM   debt_cng_ebd
 WHERE  gics.sector = industrials
 ```
 
-\newpage
+
 
 ### Sample Bar Chart Generation
 The following is an example of the Python code that uses Matplotlib to generate a bar chart showing the median debt change to normalized EBTIDA for each GICS sector for each quarter in study. Similar code was used for other bar charts in this report.
@@ -296,7 +272,7 @@ plt.ylabel(f'Cumulative {label}')
 plt.title(f'Cumulative {label} for {cat}')
 ```
 
-\newpage
+
 
 ## Appendix C: Setup
 To run this project on your machine, first clone the repository:
