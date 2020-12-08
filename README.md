@@ -152,3 +152,9 @@ To generate the database without generating graphs, run the file_import script:
 ```bash
 ./file_import.py
 ```
+
+To generate graphs for any GICS grouping, you can run the generic script as follows:
+```bash
+./generic.py <gics type> <gics classification>
+```
+It is strongly recommended to only use this for GICS Industries or Sub Industries. Trying to use this script for GICS Sectors or Industry Groups will result in graphs with too many companies that are difficult to interpret.

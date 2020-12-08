@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 sys.path.insert(1, 'handle_data/')
 import statistics
@@ -8,7 +10,7 @@ import numpy
 from matplotlib import rcParams
 from labellines import labelLine, labelLines
 
-rcParams['figure.figsize'] = [15, 10]
+rcParams['figure.figsize'] = [12, 7]
 
 con = model.sql_connection()
 cur = con.cursor()
@@ -37,8 +39,9 @@ def gen_bar(dct, label, cat, file_label):
     ax.set_title(f'{label} for {cat}')
     ax.set_xticks(x)
     ax.set_xticklabels(dct.keys())
+    fig.autofmt_xdate()
     ax.legend()
-    plt.savefig(f'{cat} Bar Charts/{cat}_{file_label}.png')
+    plt.savefig(f'{cat} Bar Charts/{cat}_{file_label}.png',bbox_inches='tight')
 
 def gen_line(dct, label, cat, file_label):
     try:
@@ -59,9 +62,12 @@ def gen_line(dct, label, cat, file_label):
     ax.axhline(color='black')
     plt.ylabel(f'Cumulative {label}')
     plt.title(f'Cumulative {label} for {cat}')
-    plt.tight_layout()
-    labelLines(plt.gca().get_lines())
-    plt.savefig(f'{cat} Cumulative Line Charts/{cat}_{file_label}_cum.png')
+    # plt.tight_layout()
+    try:
+        labelLines(plt.gca().get_lines())
+    except:
+        pass
+    plt.savefig(f'{cat} Cumulative Line Charts/{cat}_{file_label}_cum.png',bbox_inches='tight')
 
 def gen_graphs(gics_type, cat):
     for i in range(len(tables)):
@@ -74,3 +80,9 @@ def gen_graphs(gics_type, cat):
 
         # Close Database
         con.commit()
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print ("Usage: generic.py <gics type> <gics classification>")
+        exit(1)
+    gen_graphs(sys.argv[1], sys.argv[2])

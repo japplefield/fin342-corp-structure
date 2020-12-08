@@ -50,7 +50,7 @@ for sector in unique_sectors:
 # Close Database
 con.commit()
 
-rcParams['figure.figsize'] = [25, 10]
+rcParams['figure.figsize'] = [12, 7]
 x = numpy.arange(len(unique_sectors))
 width = 0.2
 fig, ax = plt.subplots()
@@ -66,5 +66,6 @@ ax.set_ylabel('Median Equity Change / EBITDA')
 ax.set_title('Median Equity Change / EBITDA by Sector, Last 4 Quarters')
 ax.set_xticks(x)
 ax.set_xticklabels(unique_sectors)
+fig.autofmt_xdate()
 ax.legend()
 plt.savefig('Equity Bar Charts/med_eq_tot_cng_ebitda_all.png')

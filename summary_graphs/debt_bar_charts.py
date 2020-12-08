@@ -50,7 +50,7 @@ for sector in unique_sectors:
 # Close Database
 con.commit()
 
-rcParams['figure.figsize'] = [25, 10]
+rcParams['figure.figsize'] = [12, 7]
 x = numpy.arange(len(unique_sectors))
 width = 0.2
 fig, ax = plt.subplots()
@@ -65,6 +65,7 @@ for i in range(len(unique_sectors) - 1):
 ax.set_ylabel('Median Debt Change / EBITDA')
 ax.set_title('Median Debt Change / EBITDA by Sector, Last 4 Quarters')
 ax.set_xticks(x)
-ax.set_xticklabels(unique_sectors)
+ax.set_xticklabels(unique_sectors, rotation=45, ha='right')
+fig.autofmt_xdate()
 ax.legend()
 plt.savefig('Debt Bar Charts/med_debt_cng_ebitda_all.png')
