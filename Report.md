@@ -1,7 +1,7 @@
 ---
 title: Pandemic Induced Restructuring
-author: Justin Appelfield (jmapple)
-date: \today
+author: Justin Applefield (jmapple)
+date: December 8, 2020
 papersize: letter
 fontsize: 11pt
 geometry:
@@ -24,9 +24,7 @@ In early 2020, markets took a huge dive as the COVID-19 pandemic worsened. Uncer
 ## Data
 The data set comprises of S&P 1500 companies’ balance sheets and debt schedules pre-COVID-19 and currently. The S&P 1500 was chosen because it covers approximately 90% of the total market capitalization of US stocks,[^1] and is therefore representative of the US market as a whole. Data was retrieved from FactSet. The firm-by-firm data include:
 
-
-[^1]: Source needed here
-
+[^1]: https://www.spglobal.com/spdji/en/indices/equity/sp-composite-1500/#overview
 
 * Debt during each of the past five quarters and EBITDA on an historical, annual basis over a few years ending December 2019 for all available firms
 * Quarterly dividends per share from Q4 2019 to Q3 2020 for all available firms
@@ -37,10 +35,28 @@ The data set comprises of S&P 1500 companies’ balance sheets and debt schedule
 Because only data where all this information were available for a given firm was usable, the final data set included only 1322 firms, as opposed to the 1500 in the S&P 1500. The majority of this discrepancy is attributable to firms where none of the past five years' EBITDA information was available on FactSet, so those firms were excluded from the sample.
 
 ## Methodology
-I computed a normalized EBITDA using 2015-2019 annual EBITDA for each company. I then computed Total Debt/normalized EBITDA for each company at December 31, 2019, March 31, 2020, June 30, 2020 and September 30, 2020. Then, I computed industry median Debt/normalized EBITDA over these 4 estimation dates to describe how industry leverage has changed over the COVID-19 window. Next, I computed an average share price for each company for each quarter in study, and determined the total equity value raised or returned to shareholders as a result of:
+I computed a normalized EBITDA using 2015-2019 annual EBITDA for each company. I then computed change in total debt each quarter. Next, to represent change in equity value, I calculated an average share price for each company for each quarter in study, and determined the total equity value raised or returned to shareholders as a result of:
 
 * Share issuance or buybacks (assuming these all occurred at the average share price that quarter)
 * Dividend payment
+
+Equity value from share issuance or buybacks was calculated as:
+$$
+\Delta \text{Eq} = \text{Quarterly Avg Price} \times \Delta \text{Shares Oustanding}
+$$
+The result from the above equation is positive for share issuance and negative for share repurchase.
+Equity value from dividend payments was calculated as:
+$$
+\Delta \text{Eq} = -1 \times \text{Dividends per Share} \times \text{Shares Oustanding}
+$$
+The result from the above equation is always negative.
+
+I then computed the following ratios for each company on December 31, 2019, March 31, 2020, June 30, 2020 and September 30, 2020 (hereafter referred to as "The Four Key Ratios"):
+
+* Change in Total Debt/normalized EBITDA
+* Change in Equity Value/normalized EBITDA
+* Change in Equity Value attributable to dividend payments/normalized EBITDA
+* Change in Equity Value attributable to share issuance or repurchase/normalized EBITDA
 
 An extension to this analysis would be to determine whether there is a relationship between corporate bond yields and leverage changes (for example, does the data show reductions in leverage during quarters when corporate bond yields increased, and increases in leverage during quarters when corporate bond yields decreased; and if industry corporate bond yields are available, are changes in corporate bond yields by industry associated with changes in leverage by industry). This analysis was not performed during the course of this project.
 
@@ -49,19 +65,19 @@ Python was used to handle all data management and graph generation. The relation
 
 Sample SQL and Python code can be found in [Appendix A](#appendix-a-sample-code).
 
-
 ## Results
+![](https://user-images.githubusercontent.com/11810237/101420457-39d3f300-38c0-11eb-97c6-36c3aa1bb8a5.png){ width=50% }
+![](https://user-images.githubusercontent.com/11810237/101420465-3ccee380-38c0-11eb-86a1-3dcc315679a8.png){ width=50% }
+![](https://user-images.githubusercontent.com/11810237/101420469-3e001080-38c0-11eb-8662-38f7a3719c1b.png){ width=50% }
+![](https://user-images.githubusercontent.com/11810237/101420471-40626a80-38c0-11eb-8e14-063f53a001fc.png){ width=50% }
+\begin{figure}[!h]
+\caption{The Median "Four Key Ratios" for each of the 11 GICS Sectors}
+\end{figure}
 
 
 
 
-
-
-```{=latex}
 \newpage
-```
-
-
 
 ## Appendix A: Sample Code
 
@@ -126,7 +142,6 @@ ax.set_xticklabels(unique_sectors)
 ax.legend()
 ```
 
-
 ### Sample Cumulative Line Chart Generation
 The following is an example of the Python code that uses Matplotlib to generate a line chart showing the cumulative median debt change to normalized EBTIDA for each GICS sector for each quarter in study. Similar code was used for other line charts in this report.
 ```python
@@ -145,10 +160,7 @@ plt.tight_layout()
 labelLines(plt.gca().get_lines())
 ```
 
-```{=latex}
 \newpage
-```
-
 
 ## Appendix B: Setup
 To run this project on your machine, first clone the repository:
@@ -173,3 +185,9 @@ To generate the database without generating graphs, run the file_import script:
 ```bash
 ./file_import.py
 ```
+
+To generate graphs for any GICS grouping, you can run the generic script as follows:
+```bash
+./generic.py <gics type> <gics classification>
+```
+It is strongly recommended to only use this for GICS Industries or Sub Industries. Trying to use this script for GICS Sectors or Industry Groups will result in graphs with too many companies that are difficult to interpret.
