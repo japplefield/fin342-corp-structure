@@ -21,21 +21,21 @@ unique_sectors = [dct['sector'] for dct in rows]
 quarters = ['Q32019'] + list(model.quarters)
 
 #Print Dividends Equity Change Line Graph by GICS sector
-NUM_COLORS = len(unique_sectors)
+NUM_COLORS = len(unique_sectors) + 1
 cm = plt.get_cmap('gist_rainbow')
 
 i = 0
-med_sector_eq_cng_divs_ebd = {}
+meds = {}
 for sector in unique_sectors:
     cur.execute("SELECT * FROM eq_cng_divs_ebd_2 INNER JOIN gics ON eq_cng_divs_ebd_2.symbol=gics.symbol WHERE gics.sector=?", [sector])
     rows = cur.fetchall()
-    med_sector_eq_cng_divs_ebd[sector] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
+    meds[sector] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.set_prop_cycle('color', [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)])
     plt.xticks(numpy.arange(5), quarters)
     plt.ylim(-0.6, 0.05)
-    plt.plot(range(5), [0] + [sum(list(med_sector_eq_cng_divs_ebd[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector, color=cm(1.*i/NUM_COLORS))
+    plt.plot(range(5), [0] + [sum(list(meds[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector, color=cm(1.*i/NUM_COLORS))
     i += 1
     plt.xlabel('Quarter')
     ax.axhline(color='black')
@@ -44,7 +44,9 @@ for sector in unique_sectors:
     plt.tight_layout()
     plt.savefig(f'Equity Cumulative Line Charts/med_eq_divs_cng_ebitda_cum_{sector}.png')
 
-
+cur.execute("SELECT * FROM eq_cng_divs_ebd_2")
+rows = cur.fetchall()
+meds['All'] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
 # Close Database
 con.commit()
 
@@ -54,8 +56,8 @@ ax = fig.add_subplot(111)
 ax.set_prop_cycle('color', [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)])
 plt.xticks(numpy.arange(5), quarters)
 plt.ylim(-0.6, 0.05)
-for sector in unique_sectors:
-    plt.plot(range(5), [0] + [sum(list(med_sector_eq_cng_divs_ebd[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector)
+for sector in meds:
+    plt.plot(range(5), [0] + [sum(list(meds[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector)
 plt.xlabel('Quarter')
 ax.axhline(color='black')
 plt.ylabel('Median Cumulative Equity Change from Dividends/Normalized EBITDA')

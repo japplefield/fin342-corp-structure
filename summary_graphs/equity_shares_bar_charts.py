@@ -46,17 +46,19 @@ for sector in unique_sectors:
         ax.text(x_position, label_y, quarter, ha="center", va="top")
     plt.savefig(f'Equity Bar Charts/med_eq_shares_cng_ebitda_{sector}.png')
 
-
+cur.execute("SELECT * FROM eq_cng_shares_ebd_2")
+rows = cur.fetchall()
+meds['All'] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
 # Close Database
 con.commit()
 
 rcParams['figure.figsize'] = [12, 7]
-x = numpy.arange(len(unique_sectors))
+x = numpy.arange(len(meds))
 width = 0.2
 fig, ax = plt.subplots()
 ax.axhline(color='black')
 ax.axhline(color='black')
-for i in range(len(unique_sectors) - 1):
+for i in range(len(meds) - 1):
     ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
 q4 = ax.bar(x - 1.5*width, [meds[sector][model.quarters[0]] for sector in meds], width, label=model.quarters[0])
 q1 = ax.bar(x - 0.5*width, [meds[sector][model.quarters[1]] for sector in meds], width, label=model.quarters[1])
@@ -65,7 +67,7 @@ q3 = ax.bar(x + 1.5*width, [meds[sector][model.quarters[3]] for sector in meds],
 ax.set_ylabel('Median Equity Change Attributable to Share Issuance (Repurchase)/ EBITDA')
 ax.set_title('Median Equity Change Attributable to Share Issuance (Repurchase) / EBITDA by Sector, Last 4 Quarters')
 ax.set_xticks(x)
-ax.set_xticklabels(unique_sectors)
+ax.set_xticklabels(meds.keys())
 fig.autofmt_xdate()
 ax.legend()
 plt.savefig('Equity Bar Charts/med_eq_shares_cng_ebitda_all.png')

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 sys.path.insert(1, 'handle_data/')
 import model
@@ -20,22 +20,22 @@ unique_sectors = [dct['sector'] for dct in rows]
 
 quarters = ['Q32019'] + list(model.quarters)
 #Print Debt Change Line Graph by GICS sector
-NUM_COLORS = len(unique_sectors)
+NUM_COLORS = len(unique_sectors) + 1
 cm = plt.get_cmap('gist_rainbow')
 
 i = 0
 # Calcuate Summary Median Debt Cng/EBITDA for each Sector
-med_sector_dbt_ebd_cng = {}
+meds = {}
 for sector in unique_sectors:
     cur.execute("SELECT * FROM debt_cng_ebd INNER JOIN gics ON debt_cng_ebd.symbol=gics.symbol WHERE gics.sector=?", [sector])
     rows = cur.fetchall()
-    med_sector_dbt_ebd_cng[sector] = {quarter: statistics.median([row[quarter] for row in rows]) for quarter in model.quarters}
+    meds[sector] = {quarter: statistics.median([row[quarter] for row in rows]) for quarter in model.quarters}
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.set_prop_cycle('color', [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)])
     plt.xticks(numpy.arange(5), quarters)
     plt.ylim(-0.15, 0.5)
-    plt.plot(range(5), [0] + [sum(list(med_sector_dbt_ebd_cng[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector, color=cm(1.*i/NUM_COLORS))
+    plt.plot(range(5), [0] + [sum(list(meds[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector, color=cm(1.*i/NUM_COLORS))
     i += 1
     plt.xlabel('Quarter')
     ax.axhline(color='black')
@@ -44,6 +44,9 @@ for sector in unique_sectors:
     plt.tight_layout()
     plt.savefig(f'Debt Cumulative Line Charts/med_debt_cng_ebitda_cum_{sector}.png')
 
+cur.execute("SELECT * FROM debt_cng_ebd")
+rows = cur.fetchall()
+meds['All'] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
 # Close Database
 con.commit()
 
@@ -53,8 +56,8 @@ ax = fig.add_subplot(111)
 ax.set_prop_cycle('color', [cm(1.*i/NUM_COLORS) for i in range(NUM_COLORS)])
 plt.xticks(numpy.arange(5), quarters)
 plt.ylim(-0.15, 0.5)
-for sector in unique_sectors:
-    plt.plot(range(5), [0] + [sum(list(med_sector_dbt_ebd_cng[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector)
+for sector in meds:
+    plt.plot(range(5), [0] + [sum(list(meds[sector].values())[:(i+1)]) for i in range(len(model.quarters))],  label=sector)
 plt.xlabel('Quarter')
 ax.axhline(color='black')
 plt.ylabel('Median Cumulative Debt Change/Normalized EBITDA')
