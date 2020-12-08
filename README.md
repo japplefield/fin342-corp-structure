@@ -1,13 +1,6 @@
----
-title: Pandemic Induced Restructuring
-author: Justin Applefield (jmapple)
-date: December 8, 2020
-papersize: letter
-fontsize: 11pt
-geometry:
-- margin=1in
-linkcolor: blue
----
+# Pandemic Induced Restructuring
+### Justin Applefield (jmapple)
+### December 8, 2020
 
 ## Table of Contents
 * [Introduction](#introduction)
