@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ./handle_data/file_import.py
 
 mkdir 'Debt Bar Charts'
