@@ -314,7 +314,7 @@ pip install -r requirements.txt
 
 Next, simply run the gen_graphs script:
 ```bash
-./gen_graphs
+./gen_graphs.sh
 ```
 
 To generate the database without generating graphs, run the file_import script:
