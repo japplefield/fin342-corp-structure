@@ -4,6 +4,8 @@ mkdir 'Debt Bar Charts'
 mkdir 'Debt Cumulative Line Charts'
 mkdir 'Equity Bar Charts'
 mkdir 'Equity Cumulative Line Charts'
+mkdir 'Total Bar Charts'
+mkdir 'Total Cumulative Line Charts'
 
 for FILE in $(ls summary_graphs/ | egrep '*.py')
 do

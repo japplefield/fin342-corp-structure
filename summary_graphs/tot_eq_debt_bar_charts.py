@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+import sys
+sys.path.insert(1, 'handle_data/')
+import model
+import statistics
+import matplotlib.pyplot as plt
+import numpy
+from matplotlib import rcParams
+from labellines import labelLine, labelLines
+
+rcParams['figure.figsize'] = [10, 10]
+
+con = model.sql_connection()
+cur = con.cursor()
+
+# Get GICS Unique sectors
+cur.execute("SELECT DISTINCT sector FROM gics")
+rows = cur.fetchall()
+unique_sectors = [dct['sector'] for dct in rows]
+
+
+meds = {}
+# Calculate Summary Median Eq Cng / EBITDA for each sector
+for sector in unique_sectors:
+    cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019, "
+                "debt_cng_ebd.Q12020 + eq_cng_tot_ebd_2.Q12020 AS Q12020, "
+                "debt_cng_ebd.Q22020 + eq_cng_tot_ebd_2.Q22020 AS Q22020, "
+                "debt_cng_ebd.Q32020 + eq_cng_tot_ebd_2.Q32020 AS Q32020 "
+                "FROM       debt_cng_ebd "
+                "INNER JOIN eq_cng_tot_ebd_2 "
+                "INNER JOIN gics "
+                "ON         debt_cng_ebd.symbol=gics.symbol "
+                "AND        debt_cng_ebd.symbol=eq_cng_tot_ebd_2.symbol "
+                "where      gics.sector=?", [sector])
+    rows = cur.fetchall()
+    meds[sector] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    plt.bar(numpy.arange(len(meds[sector].values())), meds[sector].values(), align='center')
+    plt.ylabel('Median Debt + Equity Change / Normalized EBITDA')
+    ax.text(0.5, -0.05, f'Median Quarterly Debt + Equity Change / Normalized EBITDA for {sector}', ha="center", va="top", transform=ax.transAxes)
+    plt.xticks(numpy.arange(len(meds[sector].values())), model.quarters)
+    plt.ylim(-0.2, 0.55)
+    ax = plt.gca()
+    ax.set_xticklabels([])
+    ax.spines["bottom"].set_position(("data", 0))
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    label_offset = 0.005
+    for quarter, (x_position, y_position) in zip(model.quarters, enumerate(meds[sector].values())):
+        if y_position > 0:
+            label_y = -label_offset
+        else:
+            label_y = y_position - label_offset
+        ax.text(x_position, label_y, quarter, ha="center", va="top")
+    plt.savefig(f'Total Bar Charts/med_tot_eq_debt_cng_ebitda_{sector}.png')
+
+cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019, "
+            "debt_cng_ebd.Q12020 + eq_cng_tot_ebd_2.Q12020 AS Q12020, "
+            "debt_cng_ebd.Q22020 + eq_cng_tot_ebd_2.Q22020 AS Q22020, "
+            "debt_cng_ebd.Q32020 + eq_cng_tot_ebd_2.Q32020 AS Q32020 "
+            "FROM       debt_cng_ebd "
+            "INNER JOIN eq_cng_tot_ebd_2 "
+            "ON        debt_cng_ebd.symbol=eq_cng_tot_ebd_2.symbol")
+meds['All'] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
+# Close Database
+con.commit()
+
+rcParams['figure.figsize'] = [12, 7]
+x = numpy.arange(len(meds))
+width = 0.2
+fig, ax = plt.subplots()
+q4 = ax.bar(x - 1.5*width, [meds[sector][model.quarters[0]] for sector in meds], width, label=model.quarters[0])
+q1 = ax.bar(x - 0.5*width, [meds[sector][model.quarters[1]] for sector in meds], width, label=model.quarters[1])
+q2 = ax.bar(x + 0.5*width, [meds[sector][model.quarters[2]] for sector in meds], width, label=model.quarters[2])
+q3 = ax.bar(x + 1.5*width, [meds[sector][model.quarters[3]] for sector in meds], width, label=model.quarters[3])
+ax.axhline(color='black')
+for i in range(len(meds) - 1):
+    ax.axvline(x=0.5 + i, linestyle='dashed', color='green')
+
+ax.set_ylabel('Median Debt + Equity Change / EBITDA')
+ax.set_title('Median Debt + Equity Change / EBITDA by Sector, Last 4 Quarters')
+ax.set_xticks(x)
+ax.set_xticklabels(meds.keys(), rotation=45, ha='right')
+fig.autofmt_xdate()
+ax.legend()
+plt.savefig('Total Bar Charts/med_tot_eq_debt_cng_ebitda_all.png')

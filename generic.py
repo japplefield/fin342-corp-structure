@@ -15,9 +15,9 @@ rcParams['figure.figsize'] = [12, 7]
 con = model.sql_connection()
 cur = con.cursor()
 
-tables = ['eq_cng_shares_ebd_2', 'eq_cng_divs_ebd_2', 'eq_cng_tot_ebd_2', 'debt_cng_ebd']
-table_labels = ['Equity Change from Share Issuance (Repurchase)/Normalized EBITDA', 'Equity Change from Dividends/Normalized EBITDA', 'Equity Change/Normalized EBITDA', 'Debt Change/Normalized EBITDA']
-file_labels = ['eq_shares_cng_ebitda', 'eq_divs_cng_ebitda', 'eq_tot_cng_ebitda', 'debt_cng_ebd']
+tables = ['eq_cng_shares_ebd_2', 'eq_cng_divs_ebd_2', 'eq_cng_tot_ebd_2', 'debt_cng_ebd', 'both']
+table_labels = ['Equity Change from Share Issuance (Repurchase)/Normalized EBITDA', 'Equity Change from Dividends/Normalized EBITDA', 'Equity Change/Normalized EBITDA', 'Debt Change/Normalized EBITDA', 'Debt Change + Equity Change/Normalized EBITDA']
+file_labels = ['eq_shares_cng_ebitda', 'eq_divs_cng_ebitda', 'eq_tot_cng_ebitda', 'debt_cng_ebd', 'tot_eq_debt_cng_ebitda']
 
 def gen_bar(dct, label, cat, file_label):
     try:
@@ -71,10 +71,19 @@ def gen_line(dct, label, cat, file_label):
 
 def gen_graphs(gics_type, cat):
     for i in range(len(tables)):
-        cur.execute(f"SELECT * FROM {tables[i]} INNER JOIN gics ON {tables[i]}.symbol=gics.symbol WHERE gics.{gics_type}='{cat}'")
-        rows = cur.fetchall()
-        res = {row['symbol']: {quarter: row[quarter] for quarter in model.quarters} for row in rows}
-        dct = {comp: res[comp] for comp in res if None not in res[comp].values()}
+        if tables[i] == 'both':
+            cur.execute(f"SELECT * FROM {tables[2]} INNER JOIN gics ON {tables[2]}.symbol=gics.symbol WHERE gics.{gics_type}='{cat}'")
+            rows1 = cur.fetchall()
+            res1 = {row['symbol']: {quarter: row[quarter] for quarter in model.quarters} for row in rows}
+            cur.execute(f"SELECT * FROM {tables[3]} INNER JOIN gics ON {tables[3]}.symbol=gics.symbol WHERE gics.{gics_type}='{cat}'")
+            rows2 = cur.fetchall()
+            res2 = {row['symbol']: {quarter: row[quarter] for quarter in model.quarters} for row in rows}
+            dct = {comp: {quarter: res1[comp][quarter] + res2[comp][quarter] for quarter in model.quarters} for comp in res1 if None not in res1[comp].values() and None not in res2[comp].values()}
+        else:
+            cur.execute(f"SELECT * FROM {tables[i]} INNER JOIN gics ON {tables[i]}.symbol=gics.symbol WHERE gics.{gics_type}='{cat}'")
+            rows = cur.fetchall()
+            res = {row['symbol']: {quarter: row[quarter] for quarter in model.quarters} for row in rows}
+            dct = {comp: res[comp] for comp in res if None not in res[comp].values()}
         gen_bar(dct, table_labels[i], cat, file_labels[i])
         gen_line(dct, table_labels[i], cat, file_labels[i])
 
