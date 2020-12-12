@@ -44,7 +44,7 @@ for sector in unique_sectors:
         else:
             label_y = y_position - label_offset
         ax.text(x_position, label_y, quarter, ha="center", va="top")
-    plt.savefig(f'Equity Bar Charts/med_eq_tot_cng_ebitda_{sector}.png')
+    plt.savefig(f'Equity_Bar_Charts/med_eq_tot_cng_ebitda_{sector.replace(" ", "_")}.png')
 
 cur.execute("SELECT * FROM eq_cng_tot_ebd_2")
 rows = cur.fetchall()
@@ -70,4 +70,4 @@ ax.set_xticks(x)
 ax.set_xticklabels(meds.keys())
 fig.autofmt_xdate()
 ax.legend()
-plt.savefig('Equity Bar Charts/med_eq_tot_cng_ebitda_all.png')
+plt.savefig('Equity_Bar_Charts/med_eq_tot_cng_ebitda_all.png')

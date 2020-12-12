@@ -51,7 +51,7 @@ for sector in unique_sectors:
     plt.ylabel('Median Cumulative Debt + Equity Change/Normalized EBITDA')
     plt.title(f'Median Cumulative Debt + Equity Change/Normalized EBITDA for {sector}')
     plt.tight_layout()
-    plt.savefig(f'Total Cumulative Line Charts/med_tot_eq_debt_cng_ebitda_cum_{sector}.png')
+    plt.savefig(f'Total_Cumulative_Line_Charts/med_tot_eq_debt_cng_ebitda_cum_{sector.replace(" ", "_")}.png')
 
 cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019, "
             "debt_cng_ebd.Q12020 + eq_cng_tot_ebd_2.Q12020 AS Q12020, "
@@ -79,4 +79,4 @@ plt.ylabel('Median Cumulative Debt + Equity Change/Normalized EBITDA')
 plt.title('Median Cumulative Debt + Equity Change/Normalized EBITDA by Sector')
 plt.tight_layout()
 labelLines(plt.gca().get_lines())
-plt.savefig('Total Cumulative Line Charts/med_tot_eq_debt_cng_ebitda_cum_all.png')
+plt.savefig('Total_Cumulative_Line_Charts/med_tot_eq_debt_cng_ebitda_cum_all.png')

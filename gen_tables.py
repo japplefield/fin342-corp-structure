@@ -109,4 +109,43 @@ for sector in med_sector_eq_cng_tot_ebd:
 
 
 
+med_sector_tot_debt_eq_cng_ebd = {}
+
+for sector in unique_sectors:
+    cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019, "
+                "debt_cng_ebd.Q12020 + eq_cng_tot_ebd_2.Q12020 AS Q12020, "
+                "debt_cng_ebd.Q22020 + eq_cng_tot_ebd_2.Q22020 AS Q22020, "
+                "debt_cng_ebd.Q32020 + eq_cng_tot_ebd_2.Q32020 AS Q32020 "
+                "FROM       debt_cng_ebd "
+                "INNER JOIN eq_cng_tot_ebd_2 "
+                "INNER JOIN gics "
+                "ON         debt_cng_ebd.symbol=gics.symbol "
+                "AND        debt_cng_ebd.symbol=eq_cng_tot_ebd_2.symbol "
+                "where      gics.sector=?", [sector])
+    rows = cur.fetchall()
+    med_sector_tot_debt_eq_cng_ebd[sector] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
+
+cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019, "
+            "debt_cng_ebd.Q12020 + eq_cng_tot_ebd_2.Q12020 AS Q12020, "
+            "debt_cng_ebd.Q22020 + eq_cng_tot_ebd_2.Q22020 AS Q22020, "
+            "debt_cng_ebd.Q32020 + eq_cng_tot_ebd_2.Q32020 AS Q32020 "
+            "FROM       debt_cng_ebd "
+            "INNER JOIN eq_cng_tot_ebd_2 "
+            "ON        debt_cng_ebd.symbol=eq_cng_tot_ebd_2.symbol")
+rows = cur.fetchall()
+med_sector_tot_debt_eq_cng_ebd['All'] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
+
+
+cur.execute("CREATE TABLE med_tot_eq_debt_cng_ebd "
+                "(sector TEXT UNIQUE, "
+                 "Q42019 FLOAT DEFAULT NULL, "
+                 "Q12020 FLOAT DEFAULT NULL, "
+                 "Q22020 FLOAT DEFAULT NULL, "
+                 "Q32020 FLOAT DEFAULT NULL); ")
+
+
+for sector in med_sector_eq_cng_tot_ebd:
+    cur.execute("INSERT INTO med_tot_eq_debt_cng_ebd(sector, Q42019, Q12020, Q22020, Q32020) "
+                "VALUES (?, ?, ?, ?, ?)", [sector] + list(med_sector_tot_debt_eq_cng_ebd[sector].values()))
+
 con.commit()

@@ -2,12 +2,12 @@
 
 ./handle_data/file_import.py
 
-mkdir 'Debt Bar Charts'
-mkdir 'Debt Cumulative Line Charts'
-mkdir 'Equity Bar Charts'
-mkdir 'Equity Cumulative Line Charts'
-mkdir 'Total Bar Charts'
-mkdir 'Total Cumulative Line Charts'
+mkdir 'Debt_Bar_Charts'
+mkdir 'Debt_Cumulative_Line_Charts'
+mkdir 'Equity_Bar_Charts'
+mkdir 'Equity_Cumulative_Line_Charts'
+mkdir 'Total_Bar_Charts'
+mkdir 'Total_Cumulative_Line_Charts'
 
 for FILE in $(ls summary_graphs/ | egrep '*.py')
 do

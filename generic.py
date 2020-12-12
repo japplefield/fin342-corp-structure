@@ -21,7 +21,7 @@ file_labels = ['eq_shares_cng_ebitda', 'eq_divs_cng_ebitda', 'eq_tot_cng_ebitda'
 
 def gen_bar(dct, label, cat, file_label):
     try:
-        os.mkdir(f'{cat} Bar Charts')
+        os.mkdir(f'{cat.replace(" ", "_").replace("&", "_")}_Bar_Charts')
     except FileExistsError:
         pass
     x = numpy.arange(len(dct))
@@ -41,11 +41,11 @@ def gen_bar(dct, label, cat, file_label):
     ax.set_xticklabels(dct.keys())
     fig.autofmt_xdate()
     ax.legend()
-    plt.savefig(f'{cat} Bar Charts/{cat}_{file_label}.png',bbox_inches='tight')
+    plt.savefig(f'{cat.replace(" ", "_").replace("&", "_")}_Bar_Charts/{cat.replace(" ", "_").replace("&", "_")}_{file_label}.png',bbox_inches='tight')
 
 def gen_line(dct, label, cat, file_label):
     try:
-        os.mkdir(f'{cat} Cumulative Line Charts')
+        os.mkdir(f'{cat.replace(" ", "_").replace("&", "_")}_Cumulative_Line_Charts')
     except FileExistsError:
         pass
     quarters = ['Q32019'] + list(model.quarters)
@@ -67,7 +67,7 @@ def gen_line(dct, label, cat, file_label):
         labelLines(plt.gca().get_lines())
     except:
         pass
-    plt.savefig(f'{cat} Cumulative Line Charts/{cat}_{file_label}_cum.png',bbox_inches='tight')
+    plt.savefig(f'{cat.replace(" ", "_").replace("&", "_")}_Cumulative_Line_Charts/{cat.replace(" ", "_").replace("&", "_")}_{file_label}_cum.png',bbox_inches='tight')
 
 def gen_graphs(gics_type, cat):
     for i in range(len(tables)):

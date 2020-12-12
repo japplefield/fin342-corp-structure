@@ -53,7 +53,7 @@ for sector in unique_sectors:
         else:
             label_y = y_position - label_offset
         ax.text(x_position, label_y, quarter, ha="center", va="top")
-    plt.savefig(f'Total Bar Charts/med_tot_eq_debt_cng_ebitda_{sector}.png')
+    plt.savefig(f'Total_Bar_Charts/med_tot_eq_debt_cng_ebitda_{sector.replace(" ", "_")}.png')
 
 cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019, "
             "debt_cng_ebd.Q12020 + eq_cng_tot_ebd_2.Q12020 AS Q12020, "
@@ -62,6 +62,7 @@ cur.execute("SELECT     debt_cng_ebd.Q42019 + eq_cng_tot_ebd_2.Q42019 AS Q42019,
             "FROM       debt_cng_ebd "
             "INNER JOIN eq_cng_tot_ebd_2 "
             "ON        debt_cng_ebd.symbol=eq_cng_tot_ebd_2.symbol")
+rows = cur.fetchall()
 meds['All'] = {quarter: statistics.median([row[quarter] for row in rows if row[quarter] is not None]) for quarter in model.quarters}
 # Close Database
 con.commit()
@@ -84,4 +85,4 @@ ax.set_xticks(x)
 ax.set_xticklabels(meds.keys(), rotation=45, ha='right')
 fig.autofmt_xdate()
 ax.legend()
-plt.savefig('Total Bar Charts/med_tot_eq_debt_cng_ebitda_all.png')
+plt.savefig('Total_Bar_Charts/med_tot_eq_debt_cng_ebitda_all.png')
